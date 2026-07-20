@@ -1,0 +1,18 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ask-sage-server-openapi.json, openapi/ask-sage-user-openapi.json
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: x-access-tokens
+  description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key`
+    with your email and API key.
+  sources:
+  - openapi/ask-sage-server-openapi.json
+  - openapi/ask-sage-user-openapi.json
