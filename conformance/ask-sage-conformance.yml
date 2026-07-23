@@ -1,0 +1,40 @@
+generated: '2026-07-18'
+method: searched
+source: https://www.asksage.ai/use-cases/compliance/
+standards:
+  - id: api-key-auth
+    conforms: true
+    evidence: openapi securityScheme type apiKey (x-access-tokens JWT) applied globally
+  - id: oauth2
+    conforms: false
+  - id: openid-connect
+    conforms: false
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: errors use a custom application/json ApiError envelope, not application/problem+json
+  - id: openai-api-compatible
+    conforms: true
+    evidence: OpenAI-style chat completions endpoints documented (OpenAI-Compatibility-Guide)
+  - id: anthropic-api-compatible
+    conforms: true
+    evidence: Anthropic-style messages endpoints documented (Anthropic-Compatibility-Guide)
+  - id: gemini-api-compatible
+    conforms: true
+    evidence: Gemini-style endpoints documented (Gemini-Compatibility-Guide)
+  - id: model-context-protocol
+    conforms: true
+    evidence: MCP client host; register/list MCP servers and tools via Server API
+compliance_program:
+  page: https://www.asksage.ai/use-cases/compliance/
+  certifications:
+    - FedRAMP High
+    - DoD IL5
+    - DoD IL6
+    - CMMC
+    - NIST 800-53
+    - GDPR
+  note: >-
+    Ask Sage is positioned as a government/defense-grade generative AI platform;
+    it advertises FedRAMP High and DoD Impact Level 5/6 authorization, CMMC and
+    NIST 800-53 alignment, and GDPR support. Certifications captured from public
+    marketing/compliance pages; see security/ask-sage-trust-center.yml.

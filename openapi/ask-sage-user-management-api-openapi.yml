@@ -1,0 +1,211 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin User Management API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: User Management
+  description: User profile and settings management
+paths:
+  /register:
+    post:
+      summary: Register new user
+      tags:
+      - User Management
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - first_name
+              - last_name
+              - company
+              - email
+              - password
+              - country
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                company:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                country:
+                  type: string
+                phone:
+                  type: string
+                signup_code:
+                  type: string
+                  description: Optional signup/invitation code
+      responses:
+        '200':
+          description: Registration successful or error message
+  /update:
+    post:
+      summary: Update user profile
+      tags:
+      - User Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - first_name
+              - last_name
+              - company
+              - password
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                company:
+                  type: string
+                password:
+                  type: string
+                  description: New password (empty string to keep current)
+                phone:
+                  type: string
+                custom_intro_prompt:
+                  type: string
+                  description: Custom intro prompt (paid users only)
+      responses:
+        '200':
+          description: Profile updated
+  /verify-email:
+    post:
+      summary: Verify email address
+      tags:
+      - User Management
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  type: string
+                  description: Email verification token
+      responses:
+        '200':
+          description: Email verified
+  /lost-pass:
+    post:
+      summary: Request password reset
+      tags:
+      - User Management
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Password reset email sent
+  /update-mfa:
+    post:
+      summary: Enable or update MFA
+      tags:
+      - User Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - totp
+              properties:
+                totp:
+                  type: string
+                  description: TOTP code to verify MFA setup
+      responses:
+        '200':
+          description: MFA updated
+  /logout:
+    post:
+      summary: Logout user
+      tags:
+      - User Management
+      responses:
+        '200':
+          description: User logged out
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

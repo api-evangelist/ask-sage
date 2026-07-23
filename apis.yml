@@ -1,27 +1,499 @@
 aid: ask-sage
 name: Ask Sage
-description: 'Ask Sage is a company surfaced as a portfolio company of sapphire-ventures and added to
-  the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the
-  enrichment pipeline.'
+description: >-
+  Ask Sage is a secure, government- and defense-grade generative AI platform that
+  gives regulated organizations access to a broad catalog of commercial and open
+  large language models behind a strict compliance boundary (FedRAMP High, DoD
+  Impact Level 5/6, CMMC, NIST 800-53, GDPR). Beyond chat, it offers retrieval over
+  private datasets, agents and an Agent Builder, plugins, a Deep Agent, and Model
+  Context Protocol (MCP) integrations for Microsoft 365, GitHub, and Box. The
+  platform is exposed through two REST APIs — a Server API for core AI operations
+  (models, completions, agents, datasets, training) and a User API for
+  authentication, API keys, and dataset management — plus OpenAI-, Anthropic-, and
+  Gemini-style compatibility endpoints and an official Python client.
 url: https://raw.githubusercontent.com/api-evangelist/ask-sage/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.asksage.ai/wp-content/uploads/2021/06/3_WHT.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - sapphire-ventures
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: portfolio-lead-enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Ai
-apis: []
+- Generative AI
+- Large Language Models
+- Government
+- Defense
+- Compliance
+- FedRAMP
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: ask-sage:ask-sage-admin-api
+  name: Ask Sage Admin API
+  description: Admin operations for organization management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Admin
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-admin-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-agent-builder-api
+  name: Ask Sage Agent Builder API
+  description: Agent builder workflow and agent management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Agent Builder
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-agent-builder-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-allocation-api
+  name: Ask Sage Allocation API
+  description: Token allocation and distribution policies
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Allocation
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-allocation-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-api-key-management-api
+  name: Ask Sage API Key Management API
+  description: API key operations
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - API Key Management
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-api-key-management-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-audio-api
+  name: Ask Sage Audio API
+  description: Audio processing (TTS/STT)
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Audio
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-audio-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-authentication-api
+  name: Ask Sage Authentication API
+  description: User authentication and authorization
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-authentication-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-chat-management-api
+  name: Ask Sage Chat Management API
+  description: Chat session operations
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Chat Management
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-chat-management-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-completions-api
+  name: Ask Sage Completions API
+  description: Text generation and completions
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Completions
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-completions-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-configuration-api
+  name: Ask Sage Configuration API
+  description: System configuration endpoints
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-configuration-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-dataset-management-api
+  name: Ask Sage Dataset Management API
+  description: Dataset operations and permissions
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Dataset Management
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-dataset-management-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-datasets-api
+  name: Ask Sage Datasets API
+  description: Knowledge dataset management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Datasets
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-datasets-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-deep-agent-api
+  name: Ask Sage Deep Agent API
+  description: Deep agent operations
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Deep Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-deep-agent-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-execute-agent-api
+  name: Ask Sage Execute Agent API
+  description: The Execute Agent API from Ask Sage — 1 operation(s) for execute agent.
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Execute Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-execute-agent-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-feedback-api
+  name: Ask Sage Feedback API
+  description: User feedback operations
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Feedback
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-feedback-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-files-api
+  name: Ask Sage Files API
+  description: File processing and analysis
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-files-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-list-agents-api
+  name: Ask Sage List Agents API
+  description: The List Agents API from Ask Sage — 1 operation(s) for list agents.
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - List Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-list-agents-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-mcp-servers-api
+  name: Ask Sage MCP Servers API
+  description: Model Context Protocol server management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - MCP Servers
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-mcp-servers-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-memos-api
+  name: Ask Sage Memos API
+  description: Memo management within workbooks
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Memos
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-memos-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-models-api
+  name: Ask Sage Models API
+  description: AI model management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Models
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-models-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-plugins-api
+  name: Ask Sage Plugins API
+  description: Plugin execution and management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Plugins
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-plugins-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-sources-api
+  name: Ask Sage Sources API
+  description: Source management within workbooks
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Sources
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-sources-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-superadmin-api
+  name: Ask Sage Superadmin API
+  description: Superadmin system operations
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Superadmin
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-superadmin-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-system-api
+  name: Ask Sage System API
+  description: System utilities and health checks
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-system-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-tabular-data-api
+  name: Ask Sage Tabular Data API
+  description: Tabular data ingestion and querying
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Tabular Data
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-tabular-data-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-token-requests-api
+  name: Ask Sage Token Requests API
+  description: Token request and approval workflow
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Token Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-token-requests-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-training-api
+  name: Ask Sage Training API
+  description: Model training and content ingestion
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Training
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-training-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-usage-api
+  name: Ask Sage Usage API
+  description: Token usage tracking
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-usage-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-user-information-api
+  name: Ask Sage User Information API
+  description: User data and logs
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - User Information
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-user-information-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-user-management-api
+  name: Ask Sage User Management API
+  description: User profile and settings management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - User Management
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-user-management-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-utilities-api
+  name: Ask Sage Utilities API
+  description: Utility endpoints
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Utilities
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-utilities-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-widgets-api
+  name: Ask Sage Widgets API
+  description: Widget/bot management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Widgets
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-widgets-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
+- aid: ask-sage:ask-sage-workbooks-api
+  name: Ask Sage Workbooks API
+  description: Workbook management
+  humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+  baseURL: https://api.asksage.ai/server
+  tags:
+  - Workbooks
+  properties:
+  - type: OpenAPI
+    url: openapi/ask-sage-workbooks-api-openapi.yml
+  - type: APIReference
+    url: https://docs.asksage.ai/api-docs/swagger.html
 common:
 - type: Website
   url: https://www.asksage.ai/
+- type: DeveloperPortal
+  url: https://docs.asksage.ai/
+- type: Documentation
+  url: https://docs.asksage.ai/docs/v1/api-documentation/api-documentation.html
+- type: APIReference
+  url: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+- type: GettingStarted
+  url: https://docs.asksage.ai/docs/v1/asksage-platform/getting-started/getting-started.html
+- type: Support
+  url: https://docs.asksage.ai/docs/v1/support.html
+- type: Blog
+  url: https://www.asksage.ai/company/newsroom/
+- type: GitHubOrganization
+  url: https://github.com/Ask-Sage
+- type: Pricing
+  url: https://www.asksage.ai/how-to-buy/
+- type: SignUp
+  url: https://chat.asksage.ai/
+- type: Login
+  url: https://chat.asksage.ai/login
+- type: TermsOfService
+  url: https://www.asksage.ai/terms-of-use/
+- type: PrivacyPolicy
+  url: https://www.asksage.ai/privacy-policy/
+- type: Compliance
+  url: https://www.asksage.ai/use-cases/compliance/
+- type: Packages
+  url: packages/ask-sage-packages.yml
+- type: SDKs
+  url: packages/ask-sage-packages.yml
+- type: MCPServer
+  url: mcp/ask-sage-mcp.yml
+- type: LLMsTxt
+  url: llms/ask-sage-llms.txt
+- type: Conformance
+  url: conformance/ask-sage-conformance.yml
+- type: ErrorCatalog
+  url: errors/ask-sage-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/ask-sage-lifecycle.yml
+- type: Conventions
+  url: conventions/ask-sage-conventions.yml
+- type: Components
+  url: components/ask-sage-components.yml
+- type: DataModel
+  url: data-model/ask-sage-data-model.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: TrustCenter
+  url: security/ask-sage-trust-center.yml
+- type: DomainSecurity
+  url: security/ask-sage-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/ask-sage-agentic-access.yml
+- type: Authentication
+  url: authentication/ask-sage-authentication.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

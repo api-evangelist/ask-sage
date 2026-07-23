@@ -1,0 +1,14 @@
+generated: '2026-07-18'
+method: searched
+source: https://pypi.org/pypi/asksageclient/json
+packages:
+  - language: python
+    registry: pypi
+    name: asksageclient
+    version: '1.42'
+    url: https://pypi.org/project/asksageclient/
+    install: pip install asksageclient
+    summary: Ask Sage Python Client API
+    repository: https://github.com/Ask-Sage/asksage-client
+    official: true
+    docs: https://docs.asksage.ai/docs/v1/api-documentation/ask-sage-python-client.html

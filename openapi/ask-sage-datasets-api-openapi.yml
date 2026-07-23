@@ -1,0 +1,316 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin Datasets API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: Datasets
+  description: Knowledge dataset management
+paths:
+  /get-datasets:
+    get:
+      summary: Get available datasets
+      description: Returns a list of available knowledge datasets
+      tags:
+      - Datasets
+      responses:
+        '200':
+          description: List of datasets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: integer
+    post:
+      summary: Get available datasets
+      description: Returns a list of available knowledge datasets
+      tags:
+      - Datasets
+      responses:
+        '200':
+          description: List of datasets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: integer
+  /dataset:
+    delete:
+      summary: Delete a dataset
+      description: Delete a specific dataset
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - dataset
+              properties:
+                dataset:
+                  type: string
+                  description: Name of the dataset to delete
+      responses:
+        '200':
+          description: Dataset deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                  status:
+                    type: integer
+  /delete-filename-from-dataset:
+    post:
+      summary: Delete file from dataset
+      description: Remove a specific file from a dataset
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - dataset
+              - filename
+              properties:
+                dataset:
+                  type: string
+                  description: Dataset name
+                filename:
+                  type: string
+                  description: Filename to delete
+      responses:
+        '200':
+          description: File deleted from dataset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                  status:
+                    type: integer
+    get:
+      summary: Delete file from dataset (GET)
+      description: Remove a specific file from a dataset
+      tags:
+      - Datasets
+      responses:
+        '200':
+          description: File deleted from dataset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                  status:
+                    type: integer
+  /get-all-files-ingested:
+    post:
+      summary: Get all ingested files
+      description: Returns a list of all files that have been ingested
+      tags:
+      - Datasets
+      responses:
+        '200':
+          description: List of ingested files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                  status:
+                    type: integer
+  /copy-files-dataset:
+    post:
+      summary: Copy files to dataset
+      description: Copy files from one dataset to another
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - dataset
+              - files
+              properties:
+                dataset:
+                  type: string
+                  description: Target dataset name
+                files:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      filename:
+                        type: string
+                      source_string:
+                        type: string
+                  description: Files to copy
+      responses:
+        '200':
+          description: Files copied successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: integer
+  /get-dataset-info:
+    post:
+      summary: Get dataset info
+      description: Returns metadata for a specific dataset, including is_tabular flag
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - dataset
+              properties:
+                dataset:
+                  type: string
+                  description: Dataset name
+      responses:
+        '200':
+          description: Dataset info retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      classification:
+                        type: string
+                      is_tabular:
+                        type: boolean
+                  status:
+                    type: integer
+        '404':
+          description: Dataset not found
+  /get-dataset-results:
+    post:
+      summary: Get dataset results
+      description: Get search results from specified datasets
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - datasets
+              properties:
+                datasets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                  description: List of datasets to search
+      responses:
+        '200':
+          description: Dataset results retrieved
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

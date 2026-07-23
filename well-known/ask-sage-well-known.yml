@@ -1,0 +1,21 @@
+generated: '2026-07-18'
+method: searched
+host: https://api.asksage.ai
+note: >-
+  Probed the /.well-known/ discovery surface on the API and marketing hosts.
+  No documents were served (api host returns 404; the chat SPA returns its
+  index shell for unknown paths, i.e. not a real security.txt). No WellKnown
+  or SecurityTxt pointer emitted.
+documents:
+  - path: /.well-known/security.txt
+    host: https://api.asksage.ai
+    status: 404
+  - path: /.well-known/security.txt
+    host: https://www.asksage.ai
+    status: 404
+  - path: /.well-known/openid-configuration
+    host: https://api.asksage.ai
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    host: https://api.asksage.ai
+    status: 404

@@ -1,0 +1,18 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.asksage.ai/
+components:
+  - family: SharePoint Chat Widget
+    kind: embedded-widget
+    surface: Microsoft SharePoint
+    description: >-
+      Embeddable Ask Sage chat widget for SharePoint sites, with an admin setup
+      guide and an end-user guide.
+    docs: https://docs.asksage.ai/docs/v1/integrations/sharepoint-widget/sharepoint-widget.html
+  - family: Ask Sage Chat
+    kind: hosted-surface
+    surface: web
+    description: >-
+      Hosted chat application (chat.asksage.ai) providing the interactive
+      generative-AI workspace over the same platform APIs.
+    url: https://chat.asksage.ai/

@@ -1,0 +1,4525 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Ask Sage User API",
+    "description": "Ask Sage User API for account management, organization administration, billing, and platform configuration.\n\n## Base URL\n`https://api.asksage.ai/user`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token using `/get-token-with-api-key` with your email and API key.\n\n## Key Features\n- **User Management** \u2014 Profile updates, API key management, login history\n- **Chat Sessions** \u2014 Create, retrieve, and manage conversation history\n- **Dataset Management** \u2014 Create datasets, manage permissions and assignments\n- **Workbooks** \u2014 Organize research with sources and memos\n- **Organization Admin** \u2014 User management, token allocation, usage reporting\n- **Superadmin** \u2014 Platform-wide administration and analytics",
+    "version": "2.0",
+    "contact": {
+      "name": "Ask Sage Support",
+      "email": "support@asksage.ai",
+      "url": "https://asksage.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "{baseUrl}/user",
+      "description": "Ask Sage User API",
+      "variables": {
+        "baseUrl": {
+          "default": "https://api.asksage.ai",
+          "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL."
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-tokens",
+        "description": "JWT authentication token. Obtain a token by calling `/get-token-with-api-key` with your email and 64-character API key. Some admin and superadmin endpoints also require an email address in the request body to identify the target user."
+      }
+    },
+    "schemas": {
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "Unclassified",
+              "CUI"
+            ]
+          },
+          "permissions": {
+            "type": "string",
+            "enum": [
+              "read",
+              "edit",
+              "admin",
+              "owner"
+            ]
+          }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "point_contact": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "domainname": {
+            "type": "string"
+          },
+          "force_models": {
+            "type": "string"
+          },
+          "settings": {
+            "type": "string"
+          }
+        }
+      },
+      "OrganizationPurchase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "organization_id": {
+            "type": "integer"
+          },
+          "date_purchase": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "email_payer": {
+            "type": "string"
+          },
+          "payer_comment": {
+            "type": "string"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total_training_tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expiration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/get-token-with-api-key": {
+      "post": {
+        "summary": "Get token using API key",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "api_key"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "api_key": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token generated successfully"
+          }
+        }
+      }
+    },
+    "/get-chats": {
+      "post": {
+        "summary": "Get all chat sessions for user",
+        "tags": [
+          "Chat Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Chat sessions retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string",
+                      "description": "JSON string containing chats and buttons arrays"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-chat-session": {
+      "post": {
+        "summary": "Get specific chat session",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat session retrieved"
+          }
+        }
+      }
+    },
+    "/delete-chat-session": {
+      "post": {
+        "summary": "Delete chat session",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat session deleted"
+          }
+        }
+      }
+    },
+    "/add-dataset": {
+      "post": {
+        "summary": "Add dataset to user",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 100
+                  },
+                  "classification": {
+                    "type": "string",
+                    "enum": [
+                      "Unclassified",
+                      "CUI"
+                    ]
+                  },
+                  "is_tabular": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether this is a tabular dataset"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset added"
+          }
+        }
+      }
+    },
+    "/assign-dataset": {
+      "post": {
+        "summary": "Assign dataset to user",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "email"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset assigned"
+          }
+        }
+      }
+    },
+    "/deassign-dataset": {
+      "post": {
+        "summary": "Remove dataset from user",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "email"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset deassigned"
+          }
+        }
+      }
+    },
+    "/update-permission-dataset": {
+      "post": {
+        "summary": "Update dataset permissions",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "email"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "permissions": {
+                    "type": "string",
+                    "enum": [
+                      "read",
+                      "edit",
+                      "admin"
+                    ],
+                    "default": "read"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permissions updated"
+          }
+        }
+      }
+    },
+    "/get-datasets-with-permissions": {
+      "post": {
+        "summary": "Get user datasets with permissions",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "check_permissions": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Datasets retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dataset"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get user datasets with permissions (GET)",
+        "tags": [
+          "Dataset Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Datasets retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dataset"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-user-logs": {
+      "post": {
+        "summary": "Get user activity logs",
+        "tags": [
+          "User Information"
+        ],
+        "responses": {
+          "200": {
+            "description": "Logs retrieved"
+          }
+        }
+      }
+    },
+    "/get-user-logins": {
+      "post": {
+        "summary": "Get user login history",
+        "tags": [
+          "User Information"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login history retrieved"
+          }
+        }
+      }
+    },
+    "/get-user-api-keys": {
+      "post": {
+        "summary": "Get user API keys",
+        "tags": [
+          "API Key Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "API keys retrieved"
+          }
+        }
+      }
+    },
+    "/user-api-key": {
+      "post": {
+        "summary": "Create new API key",
+        "tags": [
+          "API Key Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key created"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete API key",
+        "tags": [
+          "API Key Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key deleted"
+          }
+        }
+      }
+    },
+    "/admin-total-purchased-tokens-organization": {
+      "post": {
+        "summary": "Get total purchased tokens for organization",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token information retrieved"
+          }
+        }
+      }
+    },
+    "/admin-used-tokens-for-organization": {
+      "post": {
+        "summary": "Get used tokens for organization",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Used tokens retrieved"
+          }
+        }
+      }
+    },
+    "/admin-get-dataset": {
+      "post": {
+        "summary": "Get datasets for user (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Datasets retrieved"
+          }
+        }
+      }
+    },
+    "/admin-export-users-csv": {
+      "post": {
+        "summary": "Export organization users to CSV",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "full": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CSV file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-update-user-verified": {
+      "post": {
+        "summary": "Verify user email (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User verified"
+          }
+        }
+      }
+    },
+    "/admin-update-user-paid": {
+      "post": {
+        "summary": "Update user paid status (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "paid": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paid status updated"
+          }
+        }
+      }
+    },
+    "/admin-update-user-banned": {
+      "post": {
+        "summary": "Ban/unban user (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "banned": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ban status updated"
+          }
+        }
+      }
+    },
+    "/admin-update-user-tokens": {
+      "post": {
+        "summary": "Update user token limit (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens updated"
+          }
+        }
+      }
+    },
+    "/admin-update-user-train-tokens": {
+      "post": {
+        "summary": "Update user training token limit (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Training tokens updated"
+          }
+        }
+      }
+    },
+    "/admin-get-token-stats": {
+      "post": {
+        "summary": "Get token usage statistics (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistics retrieved"
+          }
+        }
+      }
+    },
+    "/admin-get-user-count": {
+      "post": {
+        "summary": "Get user count for organization (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "paid": {
+                    "type": "boolean"
+                  },
+                  "hide_banned": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User count retrieved"
+          }
+        }
+      }
+    },
+    "/admin-get-all-users-with-tokens": {
+      "post": {
+        "summary": "Get all organization users with token info (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "full": {
+                    "type": "boolean"
+                  },
+                  "start": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 500
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "sort_by": {
+                    "type": "string",
+                    "enum": [
+                      "id",
+                      "organization_id",
+                      "type",
+                      "first_name",
+                      "last_name",
+                      "phone",
+                      "email",
+                      "company",
+                      "paid",
+                      "max_tokens",
+                      "max_train_tokens",
+                      "banned",
+                      "email_verified",
+                      "country",
+                      "mfa_secret",
+                      "x509_cn"
+                    ]
+                  },
+                  "sort_direction": {
+                    "type": "string",
+                    "enum": [
+                      "asc",
+                      "desc"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users retrieved"
+          }
+        }
+      }
+    },
+    "/admin-get-all-logs": {
+      "post": {
+        "summary": "Get user logs (admin)",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logs retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-all-users-with-tokens": {
+      "post": {
+        "summary": "Get all users with token info (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "full": {
+                    "type": "boolean"
+                  },
+                  "paid": {
+                    "type": "boolean"
+                  },
+                  "start": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 100
+                  },
+                  "hide_banned": {
+                    "type": "boolean"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "sort_by": {
+                    "type": "string"
+                  },
+                  "sort_direction": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-export-users-csv": {
+      "post": {
+        "summary": "Export all users to CSV (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/superadmin-get-users": {
+      "post": {
+        "summary": "Get users (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-user-count": {
+      "post": {
+        "summary": "Get total user count (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "paid": {
+                    "type": "boolean"
+                  },
+                  "hide_banned": {
+                    "type": "boolean"
+                  },
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User count retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-stats": {
+      "post": {
+        "summary": "Get system statistics (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistics retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-token-stats": {
+      "post": {
+        "summary": "Get token usage statistics (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token statistics retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-all-logs": {
+      "post": {
+        "summary": "Get system logs (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logs retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-verified": {
+      "post": {
+        "summary": "Verify user email (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User verified"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-banned": {
+      "post": {
+        "summary": "Ban/unban user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "banned": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ban status updated"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-paid": {
+      "post": {
+        "summary": "Update user paid status (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "paid": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  },
+                  "testing": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paid status updated"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-admin": {
+      "post": {
+        "summary": "Grant/revoke admin privileges (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "admin": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin status updated"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-tokens": {
+      "post": {
+        "summary": "Update user token limit (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens updated"
+          }
+        }
+      }
+    },
+    "/superadmin-update-user-train-tokens": {
+      "post": {
+        "summary": "Update user training token limit (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Training tokens updated"
+          }
+        }
+      }
+    },
+    "/superadmin-change-email": {
+      "post": {
+        "summary": "Change user email (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "old_email",
+                  "new_email"
+                ],
+                "properties": {
+                  "old_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "new_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email changed"
+          }
+        }
+      }
+    },
+    "/superadmin-assign-payer": {
+      "post": {
+        "summary": "Assign payer email to user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_email",
+                  "payer_email"
+                ],
+                "properties": {
+                  "user_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "payer_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payer assigned"
+          }
+        }
+      }
+    },
+    "/superadmin-deassign-organization": {
+      "post": {
+        "summary": "Remove user from organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_email"
+                ],
+                "properties": {
+                  "user_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization removed"
+          }
+        }
+      }
+    },
+    "/superadmin-cuimfa": {
+      "post": {
+        "summary": "Enable/disable CUI MFA authorization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_email",
+                  "enable"
+                ],
+                "properties": {
+                  "user_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "enable": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CUI MFA status updated"
+          }
+        }
+      }
+    },
+    "/superadmin-delete-last-chatsession": {
+      "post": {
+        "summary": "Delete user's last chat session (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat session deleted"
+          }
+        }
+      }
+    },
+    "/superadmin-reset-mfa": {
+      "post": {
+        "summary": "Reset user MFA (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MFA reset"
+          }
+        }
+      }
+    },
+    "/superadmin-reset-cac": {
+      "post": {
+        "summary": "Reset user CAC (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CAC reset"
+          }
+        }
+      }
+    },
+    "/superadmin-reset-pw": {
+      "post": {
+        "summary": "Reset user password (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "new_password": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/superadmin-assign-dataset": {
+      "post": {
+        "summary": "Assign dataset to user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "email"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset assigned"
+          }
+        }
+      }
+    },
+    "/superadmin-deassign-dataset": {
+      "post": {
+        "summary": "Remove dataset from user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "email"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset removed"
+          }
+        }
+      }
+    },
+    "/superadmin-get-dataset": {
+      "post": {
+        "summary": "Get user datasets (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Datasets retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-delete-all-dataset": {
+      "post": {
+        "summary": "Delete dataset from all users (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset deleted"
+          }
+        }
+      }
+    },
+    "/superadmin-assign-persona": {
+      "post": {
+        "summary": "Assign persona to user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "persona_id"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "persona_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Persona assigned"
+          }
+        }
+      }
+    },
+    "/superadmin-assign-plugin": {
+      "post": {
+        "summary": "Assign plugin to user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "plugin_name"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "plugin_name": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z_]+$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plugin assigned"
+          }
+        }
+      }
+    },
+    "/superadmin-get-user-api-keys": {
+      "post": {
+        "summary": "Get user API keys (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API keys retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-user-api-key": {
+      "post": {
+        "summary": "Create API key for user (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string",
+                    "default": "default"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key created"
+          }
+        }
+      }
+    },
+    "/superadmin-get-all-organizations": {
+      "post": {
+        "summary": "Get all organizations (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizations retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-add-organization": {
+      "post": {
+        "summary": "Add new organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "point_contact",
+                  "country",
+                  "email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "point_contact": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "zip": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "domainname": {
+                    "type": "string"
+                  },
+                  "force_models": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization added"
+          }
+        }
+      }
+    },
+    "/superadmin-update-organization/{organization_id}": {
+      "put": {
+        "summary": "Update organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Organization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization updated"
+          }
+        }
+      }
+    },
+    "/superadmin-get-organization/{organization_id}": {
+      "get": {
+        "summary": "Get organization details (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-assign-users-to-organization": {
+      "post": {
+        "summary": "Assign users to organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id",
+                  "emails"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Users assigned"
+          }
+        }
+      }
+    },
+    "/superadmin-add-organization-purchase": {
+      "post": {
+        "summary": "Add organization purchase (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "date_purchase",
+                  "email_payer",
+                  "total_tokens",
+                  "total_training_tokens",
+                  "expiration",
+                  "organization_id"
+                ],
+                "properties": {
+                  "date_purchase": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "email_payer": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "payer_comment": {
+                    "type": "string"
+                  },
+                  "total_tokens": {
+                    "type": "integer"
+                  },
+                  "total_training_tokens": {
+                    "type": "integer"
+                  },
+                  "expiration": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Purchase added"
+          }
+        }
+      }
+    },
+    "/superadmin-update-organization-purchase/{purchase_id}": {
+      "put": {
+        "summary": "Update organization purchase (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "purchase_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationPurchase"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Purchase updated"
+          }
+        }
+      }
+    },
+    "/superadmin-get-organization-purchases/{organization_id}": {
+      "post": {
+        "summary": "Get organization purchases (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Purchases retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-update-sales": {
+      "post": {
+        "summary": "Import sales data from Excel (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Excel file with organizations, organization_purchases, and users sheets"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sales data imported"
+          }
+        }
+      }
+    },
+    "/superadmin-export-weekly-reports": {
+      "post": {
+        "summary": "Export weekly organization report (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "monthly": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CSV report generated",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/superadmin-export-weekly-model-usage-csv": {
+      "post": {
+        "summary": "Export model usage report (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "monthly": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CSV report generated",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-headers": {
+      "get": {
+        "summary": "Debug endpoint to view request headers",
+        "tags": [
+          "System"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Headers displayed"
+          }
+        }
+      }
+    },
+    "/append-chat": {
+      "post": {
+        "summary": "Append chat message",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id",
+                  "message"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat appended"
+          }
+        }
+      }
+    },
+    "/copy-chat": {
+      "post": {
+        "summary": "Copy chat session to another user",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "chat_id",
+                  "email"
+                ],
+                "properties": {
+                  "chat_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID of the source chat session to copy. Must belong to the calling user."
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email of the recipient user who receives the copy. The recipient must exist and share the caller's email domain or organization; the copied session is titled 'Copy of <original title>'."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Always HTTP 200. The JSON body carries the outcome in a 'status' field: 200 'Chats copied' on success; 400 for missing chat_id/email, invalid chat_id UUID, an invalid/non-existent recipient email, a recipient outside the caller's domain/organization, or a source session not owned by the caller. The HTTP status code is not used to signal errors."
+          }
+        }
+      }
+    },
+    "/create-chat-session": {
+      "post": {
+        "summary": "Create new chat session",
+        "tags": [
+          "Chat Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Chat session created"
+          }
+        }
+      }
+    },
+    "/update-chat-session-title": {
+      "post": {
+        "summary": "Update chat session title",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id",
+                  "new_title"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "new_title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "New session title. Must be non-empty; if absent or empty the response body reports status 400 with message 'Missing data' (the HTTP status is still 200)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Always HTTP 200. The JSON body carries the outcome in a 'status' field: 200 with 'Title updated' on success; 400 'Missing data' if session_id or new_title is missing; 404 'Session not found' if the session does not exist. The HTTP status code is not used to signal errors."
+          }
+        }
+      }
+    },
+    "/update-chat-session-json": {
+      "post": {
+        "summary": "Update chat session JSON data",
+        "tags": [
+          "Chat Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Session title. Optional in the request, but the server ALWAYS rewrites the session title on this endpoint and defaults to 'New Chat' when this field is omitted, so callers should send the current title to avoid overwriting it."
+                  },
+                  "json_data": {
+                    "type": "array",
+                    "description": "Ordered list of chat message objects. Optional in the request: if present it MUST be an array (the body reports status 400 'Invalid input' otherwise); if omitted the server defaults to an empty array, which overwrites the session's existing messages. Callers should always send the full message list.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "user": { "type": "string", "description": "Message author, e.g. 'me' or 'gpt'." },
+                        "message": { "type": "string" },
+                        "message_orig": { "type": "string" },
+                        "references": { "type": "string" },
+                        "follows": { "type": "string" }
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Always HTTP 200. The JSON body carries the outcome in a 'status' field: 200 with 'Chat content updated' on success; 400 'Invalid input' if session_id is missing or json_data is not an array; 400 'Invalid session_id' if the UUID is malformed. The HTTP status code is not used to signal errors. NOTE: this is an upsert, not a strict update - if session_id is a valid UUID with no existing session, the server CREATES a new session (using 'title', defaulting to 'New Chat') and returns status 200. A typo or stale session_id will therefore silently create a session rather than error."
+          }
+        }
+      }
+    },
+    "/delete-dataset": {
+      "post": {
+        "summary": "Delete dataset",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset deleted"
+          }
+        }
+      }
+    },
+    "/get-dataset-permissions": {
+      "post": {
+        "summary": "Check dataset permissions",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "permissions": {
+                    "type": "string",
+                    "enum": [
+                      "read",
+                      "edit",
+                      "admin"
+                    ],
+                    "default": "read"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Permission check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-dataset-assignments": {
+      "post": {
+        "summary": "Get dataset assignments",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignments retrieved"
+          }
+        }
+      }
+    },
+    "/update-dataset-organization": {
+      "post": {
+        "summary": "Update dataset organization sharing",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "enable": {
+                    "type": "boolean",
+                    "description": "Enable or disable organization-wide access"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization sharing updated"
+          }
+        }
+      }
+    },
+    "/get-dataset-organization": {
+      "post": {
+        "summary": "Get dataset organization status",
+        "tags": [
+          "Dataset Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer",
+                      "enum": [
+                        0,
+                        1
+                      ]
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workbook": {
+      "put": {
+        "summary": "Create workbook",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "classification": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook created"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete workbook",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook deleted"
+          }
+        }
+      }
+    },
+    "/workbook-chats": {
+      "post": {
+        "summary": "Update workbook chats",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "chats"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "chats": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook chats updated"
+          }
+        }
+      }
+    },
+    "/workbook-summary": {
+      "post": {
+        "summary": "Update workbook summary",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "overall_summary"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "overall_summary": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook summary updated"
+          }
+        }
+      }
+    },
+    "/get-workbooks": {
+      "post": {
+        "summary": "Get workbooks",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "full": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbooks retrieved"
+          }
+        }
+      }
+    },
+    "/assign-workbook": {
+      "post": {
+        "summary": "Assign workbook to user",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "email"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook assigned"
+          }
+        }
+      }
+    },
+    "/deassign-workbook": {
+      "post": {
+        "summary": "Remove workbook assignment",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "email"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workbook deassigned"
+          }
+        }
+      }
+    },
+    "/get-workbook-assignments": {
+      "post": {
+        "summary": "Get workbook assignments",
+        "tags": [
+          "Workbooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignments retrieved"
+          }
+        }
+      }
+    },
+    "/source": {
+      "put": {
+        "summary": "Add source to workbook",
+        "tags": [
+          "Sources"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "source_type",
+                  "identifier"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "source_type": {
+                    "type": "string"
+                  },
+                  "identifier": {
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "tags": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "full_text": {
+                    "type": "string",
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Source added"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete source",
+        "tags": [
+          "Sources"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "source_id"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Source deleted"
+          }
+        }
+      }
+    },
+    "/get-sources": {
+      "post": {
+        "summary": "Get sources for workbook",
+        "tags": [
+          "Sources"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sources retrieved"
+          }
+        }
+      }
+    },
+    "/memo": {
+      "put": {
+        "summary": "Add memo to workbook",
+        "tags": [
+          "Memos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id",
+                  "type",
+                  "title"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "references": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "references_descriptions": {
+                    "type": "string",
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memo added"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete memo",
+        "tags": [
+          "Memos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "memo_id"
+                ],
+                "properties": {
+                  "memo_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memo deleted"
+          }
+        }
+      }
+    },
+    "/get-memos": {
+      "post": {
+        "summary": "Get memos for workbook",
+        "tags": [
+          "Memos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workbook_id"
+                ],
+                "properties": {
+                  "workbook_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memos retrieved"
+          }
+        }
+      }
+    },
+    "/add-widget": {
+      "post": {
+        "summary": "Add widget",
+        "tags": [
+          "Widgets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "persona": {
+                    "type": "string"
+                  },
+                  "whitelisted_domains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "datasets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Widget added"
+          }
+        }
+      }
+    },
+    "/update-widget": {
+      "put": {
+        "summary": "Update widget",
+        "tags": [
+          "Widgets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "widget_id"
+                ],
+                "properties": {
+                  "widget_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "persona": {
+                    "type": "string"
+                  },
+                  "whitelisted_domains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "datasets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Widget updated"
+          }
+        }
+      }
+    },
+    "/list-widgets": {
+      "get": {
+        "summary": "List widgets",
+        "tags": [
+          "Widgets"
+        ],
+        "responses": {
+          "200": {
+            "description": "Widgets listed"
+          }
+        }
+      },
+      "post": {
+        "summary": "List widgets (POST)",
+        "tags": [
+          "Widgets"
+        ],
+        "responses": {
+          "200": {
+            "description": "Widgets listed"
+          }
+        }
+      }
+    },
+    "/delete-widget": {
+      "delete": {
+        "summary": "Delete widget",
+        "tags": [
+          "Widgets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "widget_id"
+                ],
+                "properties": {
+                  "widget_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Widget deleted"
+          }
+        }
+      }
+    },
+    "/request-tokens": {
+      "post": {
+        "summary": "Request more tokens",
+        "description": "Submit a request for additional tokens. May be auto-approved if an auto-approval rule is configured.",
+        "tags": [
+          "Token Requests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requested_amount": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of tokens requested"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token request submitted or auto-approved"
+          }
+        }
+      }
+    },
+    "/get-my-token-requests": {
+      "post": {
+        "summary": "Get my token requests",
+        "description": "Get the current user's token request history",
+        "tags": [
+          "Token Requests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 10,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token requests retrieved"
+          }
+        }
+      }
+    },
+    "/admin-get-token-requests": {
+      "post": {
+        "summary": "Get token requests (admin)",
+        "description": "Get token requests for the admin's organization",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "default": "pending"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 50,
+                    "maximum": 100
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token requests retrieved"
+          }
+        }
+      }
+    },
+    "/admin-review-token-request": {
+      "post": {
+        "summary": "Review token request (admin)",
+        "description": "Approve or deny a pending token request",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "request_id",
+                  "action"
+                ],
+                "properties": {
+                  "request_id": {
+                    "type": "integer"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "deny"
+                    ]
+                  },
+                  "approved_amount": {
+                    "type": "integer"
+                  },
+                  "admin_note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token request reviewed"
+          }
+        }
+      }
+    },
+    "/admin-allocation-policy-get": {
+      "post": {
+        "summary": "Get allocation policy (admin)",
+        "tags": [
+          "Allocation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Policy retrieved"
+          }
+        }
+      }
+    },
+    "/admin-allocation-policy-update": {
+      "post": {
+        "summary": "Update allocation policy (admin)",
+        "tags": [
+          "Allocation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "strategy": {
+                    "type": "string"
+                  },
+                  "percentage": {
+                    "type": "number"
+                  },
+                  "fixed_amount": {
+                    "type": "integer"
+                  },
+                  "min_allocation": {
+                    "type": "integer"
+                  },
+                  "max_allocation": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Policy updated"
+          }
+        }
+      }
+    },
+    "/admin-token-distribution-preview": {
+      "post": {
+        "summary": "Preview token distribution (admin)",
+        "tags": [
+          "Allocation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Distribution preview"
+          }
+        }
+      }
+    },
+    "/admin-token-distribution-execute": {
+      "post": {
+        "summary": "Execute token distribution (admin)",
+        "tags": [
+          "Allocation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Distribution executed"
+          }
+        }
+      }
+    },
+    "/admin-allocation-dashboard": {
+      "post": {
+        "summary": "Get allocation dashboard (admin)",
+        "tags": [
+          "Allocation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard data retrieved"
+          }
+        }
+      }
+    },
+    "/admin-auto-approval-rule-get": {
+      "post": {
+        "summary": "Get auto-approval rule (admin)",
+        "tags": [
+          "Token Requests"
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule retrieved"
+          }
+        }
+      }
+    },
+    "/admin-auto-approval-rule-update": {
+      "post": {
+        "summary": "Update auto-approval rule (admin)",
+        "tags": [
+          "Token Requests"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "max_approve_amount": {
+                    "type": "integer"
+                  },
+                  "max_org_consumption_pct": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rule updated"
+          }
+        }
+      }
+    },
+    "/superadmin-allocation-policy-get": {
+      "post": {
+        "summary": "Get allocation policy (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Policy retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-allocation-policy-update": {
+      "post": {
+        "summary": "Update allocation policy (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "strategy": {
+                    "type": "string"
+                  },
+                  "percentage": {
+                    "type": "number"
+                  },
+                  "fixed_amount": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Policy updated"
+          }
+        }
+      }
+    },
+    "/superadmin-token-distribution-preview": {
+      "post": {
+        "summary": "Preview token distribution (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Distribution preview"
+          }
+        }
+      }
+    },
+    "/superadmin-token-distribution-execute": {
+      "post": {
+        "summary": "Execute token distribution (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Distribution executed"
+          }
+        }
+      }
+    },
+    "/superadmin-allocation-dashboard": {
+      "post": {
+        "summary": "Get allocation dashboard (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dashboard data retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-all-datasets": {
+      "post": {
+        "summary": "Get all datasets (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 100
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "search": {
+                    "type": "string"
+                  },
+                  "sort_by": {
+                    "type": "string"
+                  },
+                  "sort_direction": {
+                    "type": "string",
+                    "enum": [
+                      "asc",
+                      "desc"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Datasets retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-dataset-files": {
+      "post": {
+        "summary": "Get dataset files (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset_id"
+                ],
+                "properties": {
+                  "dataset_id": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "offset": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset files retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-dataset-statistics": {
+      "post": {
+        "summary": "Get dataset statistics (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset statistics retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-get-dataset-details": {
+      "post": {
+        "summary": "Get dataset details (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset_id"
+                ],
+                "properties": {
+                  "dataset_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset details retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-export-datasets-csv": {
+      "post": {
+        "summary": "Export datasets to CSV (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/superadmin-get-analytics-data": {
+      "post": {
+        "summary": "Get analytics data (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analytics data retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-export-label-usage-csv": {
+      "post": {
+        "summary": "Export label usage to CSV (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/superadmin-get-token-requests": {
+      "post": {
+        "summary": "Get token requests (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "offset": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token requests retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-review-token-request": {
+      "post": {
+        "summary": "Review token request (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "request_id",
+                  "action"
+                ],
+                "properties": {
+                  "request_id": {
+                    "type": "integer"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "deny"
+                    ]
+                  },
+                  "approved_amount": {
+                    "type": "integer"
+                  },
+                  "admin_note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token request reviewed"
+          }
+        }
+      }
+    },
+    "/superadmin-total-purchased-tokens-organization": {
+      "post": {
+        "summary": "Get total purchased tokens for organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token information retrieved"
+          }
+        }
+      }
+    },
+    "/superadmin-used-tokens-for-organization": {
+      "post": {
+        "summary": "Get used tokens for organization (superadmin)",
+        "tags": [
+          "Superadmin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "organization_id"
+                ],
+                "properties": {
+                  "organization_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Used tokens retrieved"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Register new user",
+        "tags": [
+          "User Management"
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "last_name",
+                  "company",
+                  "email",
+                  "password",
+                  "country"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "signup_code": {
+                    "type": "string",
+                    "description": "Optional signup/invitation code"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration successful or error message"
+          }
+        }
+      }
+    },
+    "/update": {
+      "post": {
+        "summary": "Update user profile",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "last_name",
+                  "company",
+                  "password"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "New password (empty string to keep current)"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "custom_intro_prompt": {
+                    "type": "string",
+                    "description": "Custom intro prompt (paid users only)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated"
+          }
+        }
+      }
+    },
+    "/verify-email": {
+      "post": {
+        "summary": "Verify email address",
+        "tags": [
+          "User Management"
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token"
+                ],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Email verification token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email verified"
+          }
+        }
+      }
+    },
+    "/lost-pass": {
+      "post": {
+        "summary": "Request password reset",
+        "tags": [
+          "User Management"
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email sent"
+          }
+        }
+      }
+    },
+    "/update-mfa": {
+      "post": {
+        "summary": "Enable or update MFA",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "totp"
+                ],
+                "properties": {
+                  "totp": {
+                    "type": "string",
+                    "description": "TOTP code to verify MFA setup"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MFA updated"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "Logout user",
+        "tags": [
+          "User Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "User logged out"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization"
+    },
+    {
+      "name": "User Management",
+      "description": "User profile and settings management"
+    },
+    {
+      "name": "Chat Management",
+      "description": "Chat session operations"
+    },
+    {
+      "name": "Dataset Management",
+      "description": "Dataset operations and permissions"
+    },
+    {
+      "name": "API Key Management",
+      "description": "API key operations"
+    },
+    {
+      "name": "User Information",
+      "description": "User data and logs"
+    },
+    {
+      "name": "Organization",
+      "description": "Organization management"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin operations for organization management"
+    },
+    {
+      "name": "Superadmin",
+      "description": "Superadmin system operations"
+    },
+    {
+      "name": "System",
+      "description": "System utilities and health checks"
+    },
+    {
+      "name": "Workbooks",
+      "description": "Workbook management"
+    },
+    {
+      "name": "Sources",
+      "description": "Source management within workbooks"
+    },
+    {
+      "name": "Memos",
+      "description": "Memo management within workbooks"
+    },
+    {
+      "name": "Widgets",
+      "description": "Widget/bot management"
+    },
+    {
+      "name": "Token Requests",
+      "description": "Token request and approval workflow"
+    },
+    {
+      "name": "Allocation",
+      "description": "Token allocation and distribution policies"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.asksage.ai/
+versioning:
+  scheme: uri-path
+  current: v2
+  note: >-
+    The API surface is documented under versioned docs trees (docs.asksage.ai
+    /docs/v1/ and /docs/v2/). The OpenAPI documents report info.version 2.0 for
+    both the User API and Server API. Request routing is by resource path under
+    api.asksage.ai/user and api.asksage.ai/server; the base URL is
+    instance-specific for self-hosted / government (IL5/IL6) deployments.
+  docs: https://docs.asksage.ai/docs/v2/api-documentation/api-documentation.html
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No published deprecation policy or RFC 8594 Sunset/Deprecation header support located.
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+deprecated_operations: []

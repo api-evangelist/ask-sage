@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin Chat Management API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: Chat Management
+  description: Chat session operations
+paths:
+  /get-chats:
+    post:
+      summary: Get all chat sessions for user
+      tags:
+      - Chat Management
+      responses:
+        '200':
+          description: Chat sessions retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: JSON string containing chats and buttons arrays
+  /get-chat-session:
+    post:
+      summary: Get specific chat session
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Chat session retrieved
+  /delete-chat-session:
+    post:
+      summary: Delete chat session
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Chat session deleted
+  /append-chat:
+    post:
+      summary: Append chat message
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              - message
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Chat appended
+  /copy-chat:
+    post:
+      summary: Copy chat session to another user
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - chat_id
+              - email
+              properties:
+                chat_id:
+                  type: string
+                  format: uuid
+                  description: UUID of the source chat session to copy. Must belong to the calling user.
+                email:
+                  type: string
+                  format: email
+                  description: Email of the recipient user who receives the copy. The recipient must exist and share the caller's email domain or organization; the copied session is titled 'Copy of <original title>'.
+      responses:
+        '200':
+          description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 ''Chats copied'' on success; 400 for missing chat_id/email, invalid chat_id UUID, an invalid/non-existent recipient email, a recipient outside the caller''s domain/organization, or a source session not owned by the caller. The HTTP status code is not used to signal errors.'
+  /create-chat-session:
+    post:
+      summary: Create new chat session
+      tags:
+      - Chat Management
+      responses:
+        '200':
+          description: Chat session created
+  /update-chat-session-title:
+    post:
+      summary: Update chat session title
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              - new_title
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                new_title:
+                  type: string
+                  minLength: 1
+                  description: New session title. Must be non-empty; if absent or empty the response body reports status 400 with message 'Missing data' (the HTTP status is still 200).
+      responses:
+        '200':
+          description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 with ''Title updated'' on success; 400 ''Missing data'' if session_id or new_title is missing; 404 ''Session not found'' if the session does not exist. The HTTP status code is not used to signal errors.'
+  /update-chat-session-json:
+    post:
+      summary: Update chat session JSON data
+      tags:
+      - Chat Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                  description: Session title. Optional in the request, but the server ALWAYS rewrites the session title on this endpoint and defaults to 'New Chat' when this field is omitted, so callers should send the current title to avoid overwriting it.
+                json_data:
+                  type: array
+                  description: 'Ordered list of chat message objects. Optional in the request: if present it MUST be an array (the body reports status 400 ''Invalid input'' otherwise); if omitted the server defaults to an empty array, which overwrites the session''s existing messages. Callers should always send the full message list.'
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      user:
+                        type: string
+                        description: Message author, e.g. 'me' or 'gpt'.
+                      message:
+                        type: string
+                      message_orig:
+                        type: string
+                      references:
+                        type: string
+                      follows:
+                        type: string
+                    additionalProperties: true
+      responses:
+        '200':
+          description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 with ''Chat content updated'' on success; 400 ''Invalid input'' if session_id is missing or json_data is not an array; 400 ''Invalid session_id'' if the UUID is malformed. The HTTP status code is not used to signal errors. NOTE: this is an upsert, not a strict update - if session_id is a valid UUID with no existing session, the server CREATES a new session (using ''title'', defaulting to ''New Chat'') and returns status 200. A typo or stale session_id will therefore silently create a session rather than error.'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

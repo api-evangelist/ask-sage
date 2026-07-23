@@ -1,0 +1,46 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ask-sage-user-openapi.json, openapi/ask-sage-server-openapi.json
+docs: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+authentication:
+  style: api-key-jwt
+  header: x-access-tokens
+  note: >-
+    All endpoints require an x-access-tokens header carrying a JWT. The JWT is
+    obtained by POSTing a 64-character API key and email to the User API
+    /user/get-token-with-api-key endpoint. See authentication/ask-sage-authentication.yml.
+request:
+  transport: https
+  method_style: >-
+    Predominantly POST (JSON body) even for read operations; several read
+    endpoints also expose a GET alias (e.g. get-models, list-agents, get-personas).
+  content_type: application/json
+idempotency:
+  supported: false
+  note: No Idempotency-Key header or idempotent-retry contract is documented.
+pagination:
+  style: parameter-limited
+  note: >-
+    No cursor/offset envelope. A handful of list endpoints accept a limit
+    (e.g. User API get-user-logins defaults to the last 5 logins). Most list
+    endpoints return full collections.
+versioning:
+  style: uri-path
+  current: v2
+  cross_ref: lifecycle/ask-sage-lifecycle.yml
+error_envelope:
+  shape: '{ error: string, status: integer, details?: string }'
+  schema: ApiError
+  problem_json: false
+  cross_ref: errors/ask-sage-problem-types.yml
+rate_limiting:
+  header_signal: false
+  model: token-metered
+  note: >-
+    Usage is metered in Ask Sage tokens rather than request-rate headers.
+    Consumption/quota is queryable via Server API count-monthly-tokens,
+    count-monthly-teach-tokens, and count-monthly-tokens-left-with-org.
+compatibility_shims:
+  - OpenAI-style endpoints (see docs OpenAI-Compatibility-Guide)
+  - Anthropic-style endpoints (see docs Anthropic-Compatibility-Guide)
+  - Gemini-style endpoints (see docs Gemini-Compatibility-Guide)

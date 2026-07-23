@@ -1,0 +1,461 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin Completions API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: Completions
+  description: Text generation and completions
+paths:
+  /query:
+    post:
+      summary: Generate completion
+      description: "Main endpoint for generating AI completions. \nThe message field can be either a string or an array of conversation messages.\n"
+      tags:
+      - Completions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - message
+              properties:
+                message:
+                  $ref: '#/components/schemas/Message'
+                persona:
+                  type: integer
+                  description: Persona ID to use for the completion
+                  default: 1
+                tools:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Tool'
+                  description: Available tools/functions for the model to use
+                enabled_mcp_tools:
+                  type: array
+                  items:
+                    type: string
+                  description: List of enabled MCP tools
+                tools_to_execute:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific tools to execute
+                tool_choice:
+                  $ref: '#/components/schemas/ToolChoice'
+                reasoning_effort:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  description: Reasoning effort level for o1/o3 models
+                system_prompt:
+                  type: string
+                  description: Custom system prompt to override persona
+                mode:
+                  type: string
+                  enum:
+                  - chat
+                  - deep_agent
+                  default: chat
+                  description: Completion mode
+                deep_agent_id:
+                  type: integer
+                  description: Deep agent ID for deep_agent mode
+                dataset:
+                  oneOf:
+                  - type: string
+                    description: Single dataset name or 'all'/'none'
+                  - type: array
+                    items:
+                      type: string
+                    description: Multiple dataset names
+                  default: all
+                limit_references:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: Limit number of references (0=none, 1=limited)
+                temperature:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0
+                  description: Sampling temperature
+                model:
+                  type: string
+                  description: Model to use for completion
+                  example: gpt-4.1-mini
+                live:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  - 2
+                  default: 0
+                  description: Live search mode (0=off, 1=basic, 2=advanced)
+                streaming:
+                  type: boolean
+                  default: false
+                  description: Enable streaming response
+                usage:
+                  type: boolean
+                  description: Include usage statistics in response
+                timezone:
+                  type: string
+                  description: Timezone for time-related queries
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - message
+              properties:
+                message:
+                  type: string
+                  description: 'Message as JSON string. Can be either:
+
+                    - A single string prompt: `"What is Ask Sage?"`
+
+                    - An array of conversation messages: `[{"user": "me", "message": "What is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is..."}]`
+
+
+                    When sending via form data, the message must be JSON-encoded.
+
+                    '
+                  example: '[{"user": "me", "message": "What is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an AI platform..."}]'
+                persona:
+                  type: string
+                tools:
+                  type: string
+                  description: Tools as JSON string
+                enabled_mcp_tools:
+                  type: string
+                  description: Enabled MCP tools as JSON string
+                tools_to_execute:
+                  type: string
+                  description: Tools to execute as JSON string
+                tool_choice:
+                  type: string
+                  description: Tool choice as JSON string
+                reasoning_effort:
+                  type: string
+                system_prompt:
+                  type: string
+                mode:
+                  type: string
+                deep_agent_id:
+                  type: string
+                dataset:
+                  type: string
+                limit_references:
+                  type: string
+                temperature:
+                  type: string
+                model:
+                  type: string
+                live:
+                  type: string
+                streaming:
+                  type: string
+                usage:
+                  type: string
+                timezone:
+                  type: string
+      responses:
+        '200':
+          description: Successful completion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+            text/plain:
+              schema:
+                type: string
+                description: Streaming response with delimiter-separated JSON chunks
+  /query_with_file:
+    post:
+      summary: Generate completion with file attachments
+      description: 'Generate AI completion with one or more file attachments. Supports multiple files.
+
+        Maximum file size: 500MB per file. Maximum number of files determined by server configuration.
+
+        '
+      tags:
+      - Completions
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - message
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: One or more files to process with the query
+                message:
+                  type: string
+                  description: 'Message as JSON string. Can be either:
+
+                    - A single string prompt: `"What is Ask Sage?"`
+
+                    - An array of conversation messages: `[{"user": "me", "message": "What is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is..."}]`
+
+
+                    When sending via form data, the message must be JSON-encoded.
+
+                    '
+                  example: '[{"user": "me", "message": "Analyze this file"}, {"user": "gpt", "message": "I will analyze the file for you..."}]'
+                persona:
+                  type: string
+                tools:
+                  type: string
+                enabled_mcp_tools:
+                  type: string
+                tools_to_execute:
+                  type: string
+                tool_choice:
+                  type: string
+                reasoning_effort:
+                  type: string
+                system_prompt:
+                  type: string
+                mode:
+                  type: string
+                deep_agent_id:
+                  type: string
+                dataset:
+                  type: string
+                limit_references:
+                  type: string
+                temperature:
+                  type: string
+                model:
+                  type: string
+                live:
+                  type: string
+                streaming:
+                  type: string
+                usage:
+                  type: string
+                timezone:
+                  type: string
+      responses:
+        '200':
+          description: Successful completion with file processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+  /follow-up-questions:
+    post:
+      summary: Generate follow-up questions
+      description: Generate relevant follow-up questions based on the conversation
+      tags:
+      - Completions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - message
+              properties:
+                message:
+                  $ref: '#/components/schemas/Message'
+                dataset:
+                  type: string
+                  default: all
+                model:
+                  type: string
+                  description: Model to use
+      responses:
+        '200':
+          description: Generated follow-up questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+    get:
+      summary: Generate follow-up questions (GET)
+      description: Generate relevant follow-up questions based on the conversation
+      tags:
+      - Completions
+      responses:
+        '200':
+          description: Generated follow-up questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+components:
+  schemas:
+    Message:
+      oneOf:
+      - type: string
+        description: Single message prompt
+        example: What is Ask Sage?
+      - type: array
+        description: Array of conversation messages
+        items:
+          type: object
+          required:
+          - user
+          - message
+          properties:
+            user:
+              type: string
+              enum:
+              - me
+              - gpt
+              description: Identifies the sender of the message
+            message:
+              type: string
+              description: The content of the message
+        example:
+        - user: me
+          message: What is Ask Sage?
+        - user: gpt
+          message: Ask Sage is an...
+    ToolChoice:
+      oneOf:
+      - type: string
+        enum:
+        - auto
+        - none
+        - required
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - function
+          function:
+            type: object
+            properties:
+              name:
+                type: string
+    Tool:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the tool/function
+        description:
+          type: string
+          description: Description of what the tool does
+        parameters:
+          type: object
+          description: Parameters schema for the tool
+    CompletionResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: Status message or error description
+        message:
+          type: string
+          description: Generated completion text
+        embedding_down:
+          type: boolean
+          description: Whether embedding service is down
+        vectors_down:
+          type: boolean
+          description: Whether vector database is down
+        uuid:
+          type: string
+          description: Unique identifier for this completion
+        references:
+          type: string
+          description: References used for the completion
+        type:
+          type: string
+          description: Type of response
+        added_obj:
+          type: object
+          nullable: true
+          description: Additional object data for chained operations
+        tool_calls:
+          type: array
+          nullable: true
+          description: Tool/function calls made during completion
+        usage:
+          type: object
+          nullable: true
+          description: Token usage statistics
+        tool_responses:
+          type: array
+          nullable: true
+          description: Responses from tool executions
+        tool_calls_unified:
+          type: array
+          nullable: true
+          description: Unified tool calls format
+        status:
+          type: integer
+          description: HTTP status code
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

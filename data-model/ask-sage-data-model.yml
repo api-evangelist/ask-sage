@@ -1,0 +1,62 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ask-sage-server-openapi.json
+note: >-
+  Entity graph derived from the Server API components.schemas and the resource
+  vocabulary exposed by the operation paths. The specs are lightly componentized
+  (most request/response bodies are inline), so relationships are inferred from
+  id-reference fields and resource nesting in the documented endpoints.
+entities:
+  - name: Model
+    description: An available AI model (get-models)
+  - name: Persona
+    description: A configured AI persona (get-personas)
+  - name: Plugin
+    description: An executable plugin (get-plugins, execute-plugin)
+  - name: Dataset
+    description: A knowledge/document dataset (get-datasets, add-dataset, train)
+  - name: File
+    description: An ingested file belonging to a dataset (file, get-all-files-ingested)
+  - name: Agent
+    description: An executable agent (list-agents, create-agent, execute-agent)
+  - name: Workflow
+    description: An Agent Builder workflow (create-workflow, list-workflows)
+  - name: WorkflowVersion
+    description: A saved version of a workflow (save-workflow-version)
+  - name: Execution
+    description: A workflow/agent execution record (list-executions, get-execution-details)
+  - name: MCPServer
+    description: A registered external MCP server (add-mcp-server, list-mcp-servers)
+  - name: CompletionResponse
+    description: The response envelope for a query completion
+  - name: ConversationMessage
+    description: A message within an agent/chat conversation
+relationships:
+  - from: File
+    to: Dataset
+    type: belongs_to
+    via: dataset
+  - from: WorkflowVersion
+    to: Workflow
+    type: belongs_to
+    via: workflow_id
+  - from: Execution
+    to: Workflow
+    type: belongs_to
+    via: workflow_id
+  - from: Execution
+    to: Agent
+    type: belongs_to
+    via: agent_id
+  - from: Agent
+    to: Workflow
+    type: has_one
+    via: workflow_id
+  - from: MCPServer
+    to: Tool
+    type: has_many
+    via: list-mcp-tools
+  - from: CompletionResponse
+    to: Model
+    type: belongs_to
+    via: model

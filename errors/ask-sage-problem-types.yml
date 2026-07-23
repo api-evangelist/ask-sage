@@ -1,0 +1,54 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ask-sage-server-openapi.json
+docs: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
+format: application/json
+notes: >-
+  Ask Sage does not use RFC 9457 application/problem+json. Errors are returned
+  as a JSON envelope (schema ApiError) with an `error` message string, an HTTP
+  `status` integer, and optional `details`. Execution-time failures on
+  agent/plugin endpoints use the ExecutionError shape (error, message, details).
+envelope:
+  schema: ApiError
+  fields:
+    - name: error
+      type: string
+      required: true
+      description: Human-readable error message
+    - name: status
+      type: integer
+      required: false
+      description: HTTP status code
+    - name: details
+      type: string
+      required: false
+      description: Additional error details
+problems:
+  - status: 400
+    title: Bad request
+    description: Malformed request body or invalid parameters (e.g. check agent_id and variables).
+    occurrences: 3
+  - status: 401
+    title: Authentication failed
+    description: Missing or invalid x-access-tokens JWT; obtain a token via /user/get-token-with-api-key.
+    occurrences: 3
+  - status: 404
+    title: Not found
+    description: Target resource (agent, workflow, dataset, MCP server) not found or access denied.
+    occurrences: 18
+  - status: 409
+    title: Conflict
+    description: Duplicate resource name (e.g. duplicate agent or workflow name).
+    occurrences: 5
+  - status: 413
+    title: Payload too large
+    description: Uploaded file or request payload exceeds the size limit.
+    occurrences: 2
+  - status: 500
+    title: Internal server error
+    description: Unhandled server error or execution error; inspect the error field for details.
+    occurrences: 3
+  - status: 504
+    title: Gateway timeout
+    description: Agent or long-running execution exceeded the time budget.
+    occurrences: 1

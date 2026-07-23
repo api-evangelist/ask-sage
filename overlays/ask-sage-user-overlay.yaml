@@ -1,0 +1,14 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Ask Sage User API
+  version: 1.0.0
+extends: openapi/ask-sage-user-openapi.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: ask-sage
+      x-apievangelist-artifacts:
+        authentication: authentication/ask-sage-authentication.yml
+        conventions: conventions/ask-sage-conventions.yml
+      x-apievangelist-auth-header: x-access-tokens
+      x-apievangelist-token-endpoint: /user/get-token-with-api-key

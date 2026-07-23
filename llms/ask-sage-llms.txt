@@ -1,0 +1,41 @@
+# Ask Sage
+
+> Ask Sage is a secure, government- and defense-grade generative AI platform. It provides access to many commercial and open models behind a compliance boundary (FedRAMP High, DoD IL5/IL6, CMMC, NIST 800-53, GDPR), with retrieval over private datasets, agents, plugins, an Agent Builder, and Model Context Protocol (MCP) integrations. The platform is exposed through two REST APIs — a Server API for core AI operations and a User API for authentication, user, and dataset management — plus OpenAI-, Anthropic-, and Gemini-style compatibility endpoints and an official Python client.
+
+## APIs
+
+- [Ask Sage Server API](https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html): Core AI operations — models, query/completions, agents, plugins, deep agent, datasets, training, tokenizer, MCP servers. Base URL https://api.asksage.ai/server
+- [Ask Sage User API](https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html): Authentication, API keys, user management, chat sessions, and dataset permissions. Base URL https://api.asksage.ai/user
+
+## Specs
+
+- [Server API OpenAPI](https://docs.asksage.ai/api-docs/specs/server-api-spec.json)
+- [User API OpenAPI](https://docs.asksage.ai/api-docs/specs/user-api-spec.json)
+
+## Authentication
+
+- Header `x-access-tokens` carrying a JWT. Obtain a token by POSTing your email and 64-character API key to `/user/get-token-with-api-key`.
+
+## Docs
+
+- [API Documentation](https://docs.asksage.ai/docs/v1/api-documentation/api-documentation.html)
+- [API Endpoints](https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html)
+- [Swagger UI](https://docs.asksage.ai/api-docs/swagger.html)
+- [Redoc](https://docs.asksage.ai/api-docs/redoc.html)
+- [Python Client](https://docs.asksage.ai/docs/v1/api-documentation/ask-sage-python-client.html)
+- [OpenAI Compatibility Guide](https://docs.asksage.ai/docs/v1/api-documentation/OpenAI-Compatibility-Guide.html)
+- [Anthropic Compatibility Guide](https://docs.asksage.ai/docs/v1/api-documentation/Anthropic-Compatibility-Guide.html)
+- [Gemini Compatibility Guide](https://docs.asksage.ai/docs/v1/api-documentation/Gemini-Compatibility-Guide.html)
+- [MCP Documentation](https://docs.asksage.ai/docs/v1/mcp-documentation/mcp-documentation.html)
+- [Getting Started](https://docs.asksage.ai/docs/v1/asksage-platform/getting-started/getting-started.html)
+
+## Packages
+
+- [asksageclient (PyPI)](https://pypi.org/project/asksageclient/): Official Ask Sage Python client — pip install asksageclient
+
+## Company
+
+- [Website](https://www.asksage.ai/)
+- [Compliance](https://www.asksage.ai/use-cases/compliance/)
+- [GitHub](https://github.com/Ask-Sage)
+- [Pricing / How to Buy](https://www.asksage.ai/how-to-buy/)

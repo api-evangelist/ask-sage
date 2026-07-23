@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin Models API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: Models
+  description: AI model management
+paths:
+  /get-models:
+    get:
+      summary: Get available models
+      description: Returns a list of all available AI models
+      security: []
+      tags:
+      - Models
+      responses:
+        '200':
+          description: List of available models
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: string
+                  object:
+                    type: string
+                    example: list
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        object:
+                          type: string
+                          example: model
+                        created:
+                          type: string
+                        name:
+                          type: string
+                        owned_by:
+                          type: string
+                  status:
+                    type: integer
+                    example: 200
+    post:
+      summary: Get available models
+      description: Returns a list of all available AI models
+      security: []
+      tags:
+      - Models
+      responses:
+        '200':
+          description: List of available models
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: string
+                  object:
+                    type: string
+                    example: list
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        object:
+                          type: string
+                          example: model
+                        created:
+                          type: string
+                        name:
+                          type: string
+                        owned_by:
+                          type: string
+                  status:
+                    type: integer
+                    example: 200
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

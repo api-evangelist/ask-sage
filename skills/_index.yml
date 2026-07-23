@@ -1,0 +1,12 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/ask-sage-server-openapi.json, openapi/ask-sage-user-openapi.json
+skills:
+  - file: ask-sage-query-with-dataset.md
+    name: Query a model with a private dataset (RAG)
+    api: openapi/ask-sage-server-openapi.json
+    operations: [get-token-with-api-key, get-models, get-datasets, query]
+  - file: ask-sage-run-agent.md
+    name: Run an Ask Sage agent
+    api: openapi/ask-sage-server-openapi.json
+    operations: [get-token-with-api-key, list-agents, execute-agent]

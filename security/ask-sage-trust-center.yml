@@ -1,0 +1,13 @@
+generated: '2026-07-18'
+method: searched
+probe: true
+source: https://www.asksage.ai/use-cases/compliance/
+url: https://www.asksage.ai/use-cases/compliance/
+certifications:
+- FedRAMP
+- GDPR
+evidence:
+- source: https://www.asksage.ai/use-cases/compliance/
+  keywords:
+  - fedramp
+  - gdpr

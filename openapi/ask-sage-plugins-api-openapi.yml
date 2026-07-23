@@ -1,0 +1,284 @@
+openapi: 3.0.3
+info:
+  title: Ask Sage Server Admin Plugins API
+  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
+
+
+    ## Base URL
+
+    `https://api.asksage.ai`
+
+
+    ## Authentication
+
+    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
+
+
+    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
+
+
+    ## Message Format
+
+    The `message` field in API requests can be either:
+
+    - A single string prompt: `"What is Ask Sage?"`
+
+    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
+
+
+    ## Key Features
+
+    - **AI Completions** — Query multiple LLM providers with a unified interface
+
+    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
+
+    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
+
+    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
+
+    - **Plugins** — Extend capabilities with built-in and custom plugins
+
+    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  version: '2.0'
+  contact:
+    name: Ask Sage Support
+    email: support@asksage.ai
+    url: https://asksage.ai
+servers:
+- url: '{baseUrl}/server'
+  description: Ask Sage Server API
+  variables:
+    baseUrl:
+      default: https://api.asksage.ai
+      description: API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.
+security:
+- ApiKeyAuth: []
+tags:
+- name: Plugins
+  description: Plugin execution and management
+paths:
+  /execute-plugin:
+    post:
+      summary: Execute a plugin
+      description: Execute a specific plugin with provided values
+      tags:
+      - Plugins
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - plugin_name
+              - plugin_values
+              properties:
+                plugin_name:
+                  type: string
+                  description: Name of the plugin to execute
+                plugin_values:
+                  type: string
+                  description: Plugin values as JSON string
+                model:
+                  type: string
+                  description: Model to use for plugin execution
+                live:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  - 2
+                  default: 0
+                  description: Live mode setting
+      responses:
+        '200':
+          description: Plugin execution result (streaming)
+          content:
+            text/plain:
+              schema:
+                type: string
+  /execute-plugin-with-file:
+    post:
+      summary: Execute a plugin with file
+      description: Execute a plugin that requires file input
+      tags:
+      - Plugins
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - plugin_name
+              - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File to process with the plugin
+                plugin_name:
+                  type: string
+                  description: Name of the plugin to execute
+                plugin_values:
+                  type: string
+                  description: Plugin values as JSON string (optional)
+                model:
+                  type: string
+                  description: Model to use
+                live:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  - 2
+                  default: 0
+      responses:
+        '200':
+          description: Plugin execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+  /get-plugins:
+    get:
+      summary: Get available plugins
+      description: Returns a list of available plugins
+      tags:
+      - Plugins
+      responses:
+        '200':
+          description: List of plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        plugin_name:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        category:
+                          type: string
+                        file_mode:
+                          type: boolean
+                        paid_only:
+                          type: boolean
+                        regex:
+                          type: string
+                          nullable: true
+                        prompt_template:
+                          type: string
+                          nullable: true
+                        fields:
+                          type: array
+                          nullable: true
+                  status:
+                    type: integer
+    post:
+      summary: Get available plugins
+      description: Returns a list of available plugins
+      tags:
+      - Plugins
+      responses:
+        '200':
+          description: List of plugins
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        plugin_name:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        category:
+                          type: string
+                        file_mode:
+                          type: boolean
+                        paid_only:
+                          type: boolean
+                        regex:
+                          type: string
+                          nullable: true
+                        prompt_template:
+                          type: string
+                          nullable: true
+                        fields:
+                          type: array
+                          nullable: true
+                  status:
+                    type: integer
+components:
+  schemas:
+    CompletionResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: Status message or error description
+        message:
+          type: string
+          description: Generated completion text
+        embedding_down:
+          type: boolean
+          description: Whether embedding service is down
+        vectors_down:
+          type: boolean
+          description: Whether vector database is down
+        uuid:
+          type: string
+          description: Unique identifier for this completion
+        references:
+          type: string
+          description: References used for the completion
+        type:
+          type: string
+          description: Type of response
+        added_obj:
+          type: object
+          nullable: true
+          description: Additional object data for chained operations
+        tool_calls:
+          type: array
+          nullable: true
+          description: Tool/function calls made during completion
+        usage:
+          type: object
+          nullable: true
+          description: Token usage statistics
+        tool_responses:
+          type: array
+          nullable: true
+          description: Responses from tool executions
+        tool_calls_unified:
+          type: array
+          nullable: true
+          description: Unified tool calls format
+        status:
+          type: integer
+          description: HTTP status code
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-tokens
+      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.

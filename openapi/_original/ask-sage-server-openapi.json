@@ -1,0 +1,4949 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Ask Sage Server API",
+    "description": "Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.\n\n## Base URL\n`https://api.asksage.ai`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token by authenticating through the User API (`/user/get-token-with-api-key`).\n\n## Message Format\nThe `message` field in API requests can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"what is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an...\"}]`\n\n## Key Features\n- **AI Completions** \u2014 Query multiple LLM providers with a unified interface\n- **Knowledge Training** \u2014 Upload documents, files, and data to build custom datasets\n- **Tabular Data** \u2014 Ingest and query structured data (CSV, XLSX) with natural language\n- **Agent Builder** \u2014 Create, configure, and execute multi-step AI workflows\n- **Plugins** \u2014 Extend capabilities with built-in and custom plugins\n- **MCP Servers** \u2014 Connect to Model Context Protocol servers for tool integration",
+    "version": "2.0",
+    "contact": {
+      "name": "Ask Sage Support",
+      "email": "support@asksage.ai",
+      "url": "https://asksage.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "{baseUrl}/server",
+      "description": "Ask Sage Server API",
+      "variables": {
+        "baseUrl": {
+          "default": "https://api.asksage.ai",
+          "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL."
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-tokens",
+        "description": "JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key."
+      }
+    },
+    "schemas": {
+      "Message": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Single message prompt",
+            "example": "What is Ask Sage?"
+          },
+          {
+            "type": "array",
+            "description": "Array of conversation messages",
+            "items": {
+              "type": "object",
+              "required": [
+                "user",
+                "message"
+              ],
+              "properties": {
+                "user": {
+                  "type": "string",
+                  "enum": [
+                    "me",
+                    "gpt"
+                  ],
+                  "description": "Identifies the sender of the message"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The content of the message"
+                }
+              }
+            },
+            "example": [
+              {
+                "user": "me",
+                "message": "What is Ask Sage?"
+              },
+              {
+                "user": "gpt",
+                "message": "Ask Sage is an..."
+              }
+            ]
+          }
+        ]
+      },
+      "Tool": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the tool/function"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of what the tool does"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameters schema for the tool"
+          }
+        }
+      },
+      "ToolChoice": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "auto",
+              "none",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CompletionResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string",
+            "description": "Status message or error description"
+          },
+          "message": {
+            "type": "string",
+            "description": "Generated completion text"
+          },
+          "embedding_down": {
+            "type": "boolean",
+            "description": "Whether embedding service is down"
+          },
+          "vectors_down": {
+            "type": "boolean",
+            "description": "Whether vector database is down"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "Unique identifier for this completion"
+          },
+          "references": {
+            "type": "string",
+            "description": "References used for the completion"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of response"
+          },
+          "added_obj": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional object data for chained operations"
+          },
+          "tool_calls": {
+            "type": "array",
+            "nullable": true,
+            "description": "Tool/function calls made during completion"
+          },
+          "usage": {
+            "type": "object",
+            "nullable": true,
+            "description": "Token usage statistics"
+          },
+          "tool_responses": {
+            "type": "array",
+            "nullable": true,
+            "description": "Responses from tool executions"
+          },
+          "tool_calls_unified": {
+            "type": "array",
+            "nullable": true,
+            "description": "Unified tool calls format"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code"
+          }
+        }
+      },
+      "MCPServer": {
+        "type": "object",
+        "required": [
+          "server_name",
+          "server_url"
+        ],
+        "properties": {
+          "server_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9\\s\\-_.]+$",
+            "description": "Name of the MCP server"
+          },
+          "server_url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "HTTPS URL of the MCP server"
+          },
+          "server_type": {
+            "type": "string",
+            "maxLength": 50,
+            "pattern": "^[a-zA-Z0-9\\-_]+$",
+            "description": "Type of MCP server"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Description of the MCP server"
+          },
+          "metadata_json": {
+            "type": "string",
+            "description": "Additional metadata in JSON format"
+          }
+        }
+      },
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the agent"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the agent resource"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the agent"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the agent's purpose"
+          },
+          "agent_mode": {
+            "type": "string",
+            "enum": [
+              "single",
+              "router",
+              "autonomous"
+            ],
+            "description": "Agent execution mode"
+          },
+          "current_version": {
+            "type": "integer",
+            "description": "Current version number of the agent"
+          },
+          "is_published": {
+            "type": "boolean",
+            "description": "Indicates if the current version is published and available for use"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the agent was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the agent was last updated"
+          },
+          "primary_workflow_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the primary workflow"
+          }
+        }
+      },
+      "ConversationMessage": {
+        "type": "object",
+        "required": [
+          "message",
+          "user"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The content of the message"
+          },
+          "user": {
+            "type": "string",
+            "enum": [
+              "me",
+              "system"
+            ],
+            "description": "Identifies the sender (me = user, system = agent)"
+          }
+        }
+      },
+      "AgentExecutionResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": 200
+          },
+          "execution_status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "timeout"
+            ],
+            "description": "Status of the agent execution"
+          },
+          "execution_id": {
+            "type": "integer",
+            "description": "Unique identifier for this execution"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "description": "Execution duration in milliseconds"
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "string",
+                "description": "The agent's final response text"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of response (e.g., \"text\")"
+              },
+              "source": {
+                "type": "string",
+                "description": "Source node of the response"
+              }
+            }
+          },
+          "workflow": {
+            "type": "object",
+            "description": "Details of the primary workflow that was executed",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The workflow's numeric ID"
+              },
+              "uuid": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The workflow's unique identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the workflow"
+              },
+              "version": {
+                "type": "integer",
+                "description": "The version number of the workflow that was executed"
+              }
+            }
+          },
+          "node_executions": {
+            "type": "array",
+            "description": "A step-by-step log of each node's execution within the workflow",
+            "items": {
+              "type": "object",
+              "properties": {
+                "node_id": {
+                  "type": "string",
+                  "description": "The unique identifier of the node"
+                },
+                "node_type": {
+                  "type": "string",
+                  "description": "The type of node (e.g., \"llm\", \"condition\")"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "completed",
+                    "failed"
+                  ],
+                  "description": "The execution status of the node"
+                },
+                "output": {
+                  "type": "object",
+                  "nullable": true,
+                  "description": "The output produced by the node if successful"
+                },
+                "error": {
+                  "type": "object",
+                  "nullable": true,
+                  "description": "Error details if the node failed"
+                },
+                "metadata": {
+                  "type": "object",
+                  "nullable": true,
+                  "description": "Additional metadata about the node execution"
+                }
+              }
+            }
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message if execution failed"
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional error details"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "ExecutionError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/get-models": {
+      "get": {
+        "summary": "Get available models",
+        "description": "Returns a list of all available AI models",
+        "security": [],
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "list"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "object": {
+                            "type": "string",
+                            "example": "model"
+                          },
+                          "created": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "owned_by": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get available models",
+        "description": "Returns a list of all available AI models",
+        "security": [],
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "list"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "object": {
+                            "type": "string",
+                            "example": "model"
+                          },
+                          "created": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "owned_by": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query": {
+      "post": {
+        "summary": "Generate completion",
+        "description": "Main endpoint for generating AI completions. \nThe message field can be either a string or an array of conversation messages.\n",
+        "tags": [
+          "Completions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "$ref": "#/components/schemas/Message"
+                  },
+                  "persona": {
+                    "type": "integer",
+                    "description": "Persona ID to use for the completion",
+                    "default": 1
+                  },
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Tool"
+                    },
+                    "description": "Available tools/functions for the model to use"
+                  },
+                  "enabled_mcp_tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of enabled MCP tools"
+                  },
+                  "tools_to_execute": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Specific tools to execute"
+                  },
+                  "tool_choice": {
+                    "$ref": "#/components/schemas/ToolChoice"
+                  },
+                  "reasoning_effort": {
+                    "type": "string",
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ],
+                    "description": "Reasoning effort level for o1/o3 models"
+                  },
+                  "system_prompt": {
+                    "type": "string",
+                    "description": "Custom system prompt to override persona"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "chat",
+                      "deep_agent"
+                    ],
+                    "default": "chat",
+                    "description": "Completion mode"
+                  },
+                  "deep_agent_id": {
+                    "type": "integer",
+                    "description": "Deep agent ID for deep_agent mode"
+                  },
+                  "dataset": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "Single dataset name or 'all'/'none'"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Multiple dataset names"
+                      }
+                    ],
+                    "default": "all"
+                  },
+                  "limit_references": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ],
+                    "description": "Limit number of references (0=none, 1=limited)"
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0,
+                    "description": "Sampling temperature"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use for completion",
+                    "example": "gpt-4.1-mini"
+                  },
+                  "live": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "default": 0,
+                    "description": "Live search mode (0=off, 1=basic, 2=advanced)"
+                  },
+                  "streaming": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable streaming response"
+                  },
+                  "usage": {
+                    "type": "boolean",
+                    "description": "Include usage statistics in response"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Timezone for time-related queries"
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Message as JSON string. Can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"What is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is...\"}]`\n\nWhen sending via form data, the message must be JSON-encoded.\n",
+                    "example": "[{\"user\": \"me\", \"message\": \"What is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an AI platform...\"}]"
+                  },
+                  "persona": {
+                    "type": "string"
+                  },
+                  "tools": {
+                    "type": "string",
+                    "description": "Tools as JSON string"
+                  },
+                  "enabled_mcp_tools": {
+                    "type": "string",
+                    "description": "Enabled MCP tools as JSON string"
+                  },
+                  "tools_to_execute": {
+                    "type": "string",
+                    "description": "Tools to execute as JSON string"
+                  },
+                  "tool_choice": {
+                    "type": "string",
+                    "description": "Tool choice as JSON string"
+                  },
+                  "reasoning_effort": {
+                    "type": "string"
+                  },
+                  "system_prompt": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "deep_agent_id": {
+                    "type": "string"
+                  },
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "limit_references": {
+                    "type": "string"
+                  },
+                  "temperature": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "live": {
+                    "type": "string"
+                  },
+                  "streaming": {
+                    "type": "string"
+                  },
+                  "usage": {
+                    "type": "string"
+                  },
+                  "timezone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful completion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionResponse"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "description": "Streaming response with delimiter-separated JSON chunks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query_with_file": {
+      "post": {
+        "summary": "Generate completion with file attachments",
+        "description": "Generate AI completion with one or more file attachments. Supports multiple files.\nMaximum file size: 500MB per file. Maximum number of files determined by server configuration.\n",
+        "tags": [
+          "Completions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "One or more files to process with the query"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message as JSON string. Can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"What is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is...\"}]`\n\nWhen sending via form data, the message must be JSON-encoded.\n",
+                    "example": "[{\"user\": \"me\", \"message\": \"Analyze this file\"}, {\"user\": \"gpt\", \"message\": \"I will analyze the file for you...\"}]"
+                  },
+                  "persona": {
+                    "type": "string"
+                  },
+                  "tools": {
+                    "type": "string"
+                  },
+                  "enabled_mcp_tools": {
+                    "type": "string"
+                  },
+                  "tools_to_execute": {
+                    "type": "string"
+                  },
+                  "tool_choice": {
+                    "type": "string"
+                  },
+                  "reasoning_effort": {
+                    "type": "string"
+                  },
+                  "system_prompt": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "deep_agent_id": {
+                    "type": "string"
+                  },
+                  "dataset": {
+                    "type": "string"
+                  },
+                  "limit_references": {
+                    "type": "string"
+                  },
+                  "temperature": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "live": {
+                    "type": "string"
+                  },
+                  "streaming": {
+                    "type": "string"
+                  },
+                  "usage": {
+                    "type": "string"
+                  },
+                  "timezone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful completion with file processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list-agents": {
+      "get": {
+        "summary": "List Agents",
+        "description": "Returns a list of all agents available to the authenticated user.",
+        "operationId": "list_agents_ep",
+        "responses": {
+          "200": {
+            "description": "A list of available agents.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "agent_mode": {
+                            "type": "string",
+                            "enum": [
+                              "single",
+                              "router",
+                              "autonomous"
+                            ]
+                          },
+                          "primary_workflow_uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "current_version": {
+                            "type": "integer"
+                          },
+                          "is_published": {
+                            "type": "boolean"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "The total number of agents returned.",
+                      "example": 1
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status code.",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      },
+      "post": {
+        "summary": "List Agents (POST)",
+        "description": "Returns a list of all agents available to the authenticated user.",
+        "operationId": "list_agents_ep",
+        "responses": {
+          "200": {
+            "description": "A list of available agents.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "agent_mode": {
+                            "type": "string",
+                            "enum": [
+                              "single",
+                              "router",
+                              "autonomous"
+                            ]
+                          },
+                          "primary_workflow_uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "current_version": {
+                            "type": "integer"
+                          },
+                          "is_published": {
+                            "type": "boolean"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "The total number of agents returned.",
+                      "example": 1
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status code.",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed."
+          },
+          "500": {
+            "description": "Internal Server Error."
+          }
+        }
+      }
+    },
+    "/execute-agent": {
+      "post": {
+        "summary": "Execute Agent",
+        "description": "Executes a specific agent with a message and optional parameters. Supports both non-streaming (JSON) and streaming (Server-Sent Events) responses.\n",
+        "operationId": "execute_agent_ep",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id",
+                  "message"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer",
+                    "description": "ID of the agent to execute."
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "The user's message/prompt to the agent."
+                  },
+                  "streaming": {
+                    "type": "boolean",
+                    "description": "If true, enables a Server-Sent Events (SSE) stream. If false, returns a single JSON response.",
+                    "default": true
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "A JSON object of runtime variables. For file variables, the value should be the filename of a file uploaded via a multipart/form-data request.",
+                    "example": {
+                      "priority": "high",
+                      "source_data": "data.csv"
+                    }
+                  },
+                  "conversation_history": {
+                    "type": "array",
+                    "description": "A JSON array representing the conversation history.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "user": {
+                          "type": "string",
+                          "enum": [
+                            "me",
+                            "system"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id",
+                  "message"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "streaming": {
+                    "type": "string",
+                    "enum": [
+                      "true",
+                      "false"
+                    ],
+                    "default": "true"
+                  },
+                  "variables": {
+                    "type": "string",
+                    "description": "A JSON string of runtime variables. The value for a file variable must match the filename of an uploaded file.",
+                    "example": "{\"priority\": \"high\", \"source_data\": \"data.csv\"}"
+                  },
+                  "conversation_history": {
+                    "type": "string",
+                    "description": "A JSON string of the conversation history array."
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "A file to be processed. To upload multiple files, provide multiple form parts with the same 'file' key."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent execution initiated. The response format depends on the `streaming` parameter and the `Accept` header.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExecutionResponse"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "A Server-Sent Events (SSE) stream, sent when `streaming: true`. The stream consists of multiple JSON objects, each preceded by `data: ` and followed by `\\n\\n`.\n**Event Types:** Each JSON object has an `event` field. Key events include: - `workflow_started`: Signals the beginning of execution. - `node_completed`: A node finished successfully. Contains `data.output`. - `node_error`: A node failed. Contains `data.error`. - `workflow_completed`: The workflow finished. Contains final `data.output`. - `agent_response`: The final, processed response from the agent.\n**Example Event:** `data: {\"event\": \"node_completed\", \"data\": {\"node_id\": \"llm_1\", \"output\": {\"response\": \"Hello!\"}}, \"timestamp\": \"...\"}\\n\\n`\n"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - check agent_id and variables.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request payload too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Execution error - see error field for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionError"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Timeout - agent execution took too long.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/execute-plugin": {
+      "post": {
+        "summary": "Execute a plugin",
+        "description": "Execute a specific plugin with provided values",
+        "tags": [
+          "Plugins"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "plugin_name",
+                  "plugin_values"
+                ],
+                "properties": {
+                  "plugin_name": {
+                    "type": "string",
+                    "description": "Name of the plugin to execute"
+                  },
+                  "plugin_values": {
+                    "type": "string",
+                    "description": "Plugin values as JSON string"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use for plugin execution"
+                  },
+                  "live": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "default": 0,
+                    "description": "Live mode setting"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plugin execution result (streaming)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/execute-plugin-with-file": {
+      "post": {
+        "summary": "Execute a plugin with file",
+        "description": "Execute a plugin that requires file input",
+        "tags": [
+          "Plugins"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "plugin_name",
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to process with the plugin"
+                  },
+                  "plugin_name": {
+                    "type": "string",
+                    "description": "Name of the plugin to execute"
+                  },
+                  "plugin_values": {
+                    "type": "string",
+                    "description": "Plugin values as JSON string (optional)"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use"
+                  },
+                  "live": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plugin execution result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-deep-agent": {
+      "post": {
+        "summary": "Get deep agent updates",
+        "description": "Get streaming updates from a deep agent",
+        "tags": [
+          "Deep Agent"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "deep_agent_id"
+                ],
+                "properties": {
+                  "deep_agent_id": {
+                    "type": "integer",
+                    "description": "ID of the deep agent"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deep agent updates (streaming)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/add-mcp-server": {
+      "post": {
+        "summary": "Add MCP server",
+        "description": "Add a new MCP (Model Context Protocol) server for the user",
+        "tags": [
+          "MCP Servers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPServer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP server added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "server_id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Add MCP server (GET)",
+        "description": "Add a new MCP (Model Context Protocol) server for the user (GET method supported)",
+        "tags": [
+          "MCP Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "MCP server added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "server_id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update-mcp-server": {
+      "put": {
+        "summary": "Update MCP server",
+        "description": "Update an existing MCP server configuration",
+        "tags": [
+          "MCP Servers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "server_id"
+                    ],
+                    "properties": {
+                      "server_id": {
+                        "type": "integer",
+                        "description": "ID of the server to update"
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/MCPServer"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP server updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "server_id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list-mcp-servers": {
+      "get": {
+        "summary": "List user's MCP servers",
+        "description": "Get a list of all MCP servers configured for the user",
+        "tags": [
+          "MCP Servers"
+        ],
+        "parameters": [
+          {
+            "name": "include_inactive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Include inactive servers in the list"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of MCP servers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "List user's MCP servers (POST)",
+        "description": "Get a list of all MCP servers configured for the user",
+        "tags": [
+          "MCP Servers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "include_inactive": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include inactive servers"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of MCP servers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list-mcp-whitelisted-servers": {
+      "get": {
+        "summary": "List whitelisted MCP servers",
+        "description": "Get a list of all whitelisted MCP servers",
+        "tags": [
+          "MCP Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of whitelisted servers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "List whitelisted MCP servers (POST)",
+        "description": "Get a list of all whitelisted MCP servers",
+        "tags": [
+          "MCP Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of whitelisted servers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list-mcp-tools": {
+      "get": {
+        "summary": "List MCP tools",
+        "description": "Get a list of all available MCP tools from configured servers",
+        "tags": [
+          "MCP Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of MCP tools",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "List MCP tools (POST)",
+        "description": "Get a list of all available MCP tools from configured servers",
+        "tags": [
+          "MCP Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of MCP tools",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete-mcp-server": {
+      "delete": {
+        "summary": "Delete MCP server",
+        "description": "Soft delete an MCP server by setting it as inactive",
+        "tags": [
+          "MCP Servers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "server_id"
+                ],
+                "properties": {
+                  "server_id": {
+                    "type": "integer",
+                    "description": "ID of the server to delete"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "server_id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Server not found or access denied"
+          }
+        }
+      },
+      "post": {
+        "summary": "Delete MCP server (POST)",
+        "description": "Soft delete an MCP server by setting it as inactive",
+        "tags": [
+          "MCP Servers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "server_id"
+                ],
+                "properties": {
+                  "server_id": {
+                    "type": "integer",
+                    "description": "ID of the server to delete"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "server_id": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Server not found or access denied"
+          }
+        }
+      }
+    },
+    "/follow-up-questions": {
+      "post": {
+        "summary": "Generate follow-up questions",
+        "description": "Generate relevant follow-up questions based on the conversation",
+        "tags": [
+          "Completions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "$ref": "#/components/schemas/Message"
+                  },
+                  "dataset": {
+                    "type": "string",
+                    "default": "all"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated follow-up questions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Generate follow-up questions (GET)",
+        "description": "Generate relevant follow-up questions based on the conversation",
+        "tags": [
+          "Completions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated follow-up questions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tokenizer": {
+      "post": {
+        "summary": "Count tokens",
+        "description": "Get token count for provided content",
+        "tags": [
+          "Utilities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Content to tokenize"
+                  },
+                  "model": {
+                    "type": "string",
+                    "default": "ada-002",
+                    "description": "Model to use for tokenization"
+                  },
+                  "convert_to_asksage": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Convert to Ask Sage token format"
+                  },
+                  "completion_estimate": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Estimated completion tokens"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Count tokens (GET)",
+        "description": "Get token count for provided content",
+        "tags": [
+          "Utilities"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-personas": {
+      "get": {
+        "summary": "Get available personas",
+        "description": "Returns a list of available AI personas",
+        "tags": [
+          "Configuration"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of personas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get available personas",
+        "description": "Returns a list of available AI personas",
+        "tags": [
+          "Configuration"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of personas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-datasets": {
+      "get": {
+        "summary": "Get available datasets",
+        "description": "Returns a list of available knowledge datasets",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get available datasets",
+        "description": "Returns a list of available knowledge datasets",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset": {
+      "delete": {
+        "summary": "Delete a dataset",
+        "description": "Delete a specific dataset",
+        "tags": [
+          "Datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string",
+                    "description": "Name of the dataset to delete"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-plugins": {
+      "get": {
+        "summary": "Get available plugins",
+        "description": "Returns a list of available plugins",
+        "tags": [
+          "Plugins"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of plugins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "plugin_name": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "file_mode": {
+                            "type": "boolean"
+                          },
+                          "paid_only": {
+                            "type": "boolean"
+                          },
+                          "regex": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "prompt_template": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "fields": {
+                            "type": "array",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get available plugins",
+        "description": "Returns a list of available plugins",
+        "tags": [
+          "Plugins"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of plugins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "plugin_name": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "file_mode": {
+                            "type": "boolean"
+                          },
+                          "paid_only": {
+                            "type": "boolean"
+                          },
+                          "regex": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "prompt_template": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "fields": {
+                            "type": "array",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vote-down": {
+      "post": {
+        "summary": "Vote down a response",
+        "description": "Mark a response as unhelpful or incorrect",
+        "tags": [
+          "Feedback"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "uuid"
+                ],
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "description": "UUID of the response to vote down"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vote recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Vote down a response (GET)",
+        "description": "Mark a response as unhelpful or incorrect",
+        "tags": [
+          "Feedback"
+        ],
+        "responses": {
+          "200": {
+            "description": "Vote recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/count-monthly-tokens": {
+      "get": {
+        "summary": "Get monthly token usage",
+        "description": "Returns the count of tokens used this month",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get monthly token usage",
+        "description": "Returns the count of tokens used this month for specific app",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "app_name": {
+                    "type": "string",
+                    "default": "asksage",
+                    "description": "Application name to filter token count"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/count-monthly-teach-tokens": {
+      "get": {
+        "summary": "Get monthly teaching token usage",
+        "description": "Returns the count of teaching/training tokens used this month",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Teaching token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get monthly teaching token usage",
+        "description": "Returns the count of teaching/training tokens used this month",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Teaching token count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/train": {
+      "post": {
+        "summary": "Train the model",
+        "description": "Add new content to the knowledge base",
+        "tags": [
+          "Training"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Content to train/ingest"
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "Additional context for the content"
+                  },
+                  "skip_vectordb": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Skip adding to vector database"
+                  },
+                  "force_dataset": {
+                    "type": "string",
+                    "description": "Force specific dataset for training"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Train the model (GET)",
+        "description": "Add new content to the knowledge base",
+        "tags": [
+          "Training"
+        ],
+        "responses": {
+          "200": {
+            "description": "Training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/train-with-file": {
+      "post": {
+        "summary": "Train with file",
+        "description": "Train the model using file content",
+        "tags": [
+          "Training"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to train from"
+                  },
+                  "dataset": {
+                    "type": "string",
+                    "description": "Dataset to add content to"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Train with file (GET)",
+        "description": "Train the model using file content",
+        "tags": [
+          "Training"
+        ],
+        "responses": {
+          "200": {
+            "description": "File training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/train-with-array": {
+      "post": {
+        "summary": "Train with array of data",
+        "description": "Train the model using an array of content",
+        "tags": [
+          "Training"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data",
+                  "dataset"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "description": "JSON array of data to train"
+                  },
+                  "dataset": {
+                    "type": "string",
+                    "description": "Dataset name"
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "Additional context"
+                  },
+                  "filename": {
+                    "type": "string",
+                    "description": "Source filename"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Array training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Train with array of data (GET)",
+        "description": "Train the model using an array of content",
+        "tags": [
+          "Training"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array training successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "embedding": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete-filename-from-dataset": {
+      "post": {
+        "summary": "Delete file from dataset",
+        "description": "Remove a specific file from a dataset",
+        "tags": [
+          "Datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "filename"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string",
+                    "description": "Dataset name"
+                  },
+                  "filename": {
+                    "type": "string",
+                    "description": "Filename to delete"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File deleted from dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Delete file from dataset (GET)",
+        "description": "Remove a specific file from a dataset",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted from dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-all-files-ingested": {
+      "post": {
+        "summary": "Get all ingested files",
+        "description": "Returns a list of all files that have been ingested",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of ingested files",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/copy-files-dataset": {
+      "post": {
+        "summary": "Copy files to dataset",
+        "description": "Copy files from one dataset to another",
+        "tags": [
+          "Datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset",
+                  "files"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string",
+                    "description": "Target dataset name"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string"
+                        },
+                        "source_string": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "Files to copy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Files copied successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-text-to-speech": {
+      "post": {
+        "summary": "Convert text to speech",
+        "description": "Generate audio from text using text-to-speech",
+        "tags": [
+          "Audio"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text to convert to speech"
+                  },
+                  "voice": {
+                    "type": "string",
+                    "default": "alloy",
+                    "description": "Voice to use for speech"
+                  },
+                  "model": {
+                    "type": "string",
+                    "default": "tts-hd",
+                    "description": "TTS model to use"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "description": "TTS provider to use (e.g., 'google' for Gemini, default is Azure/OpenAI)"
+                  },
+                  "language_code": {
+                    "type": "string",
+                    "default": "en-US",
+                    "description": "Language code for speech synthesis (used with Google provider)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audio file",
+            "content": {
+              "audio/mpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file": {
+      "post": {
+        "summary": "Process and analyze file",
+        "description": "Upload a file for processing and text extraction",
+        "tags": [
+          "Files"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to process"
+                  },
+                  "strategy": {
+                    "type": "string",
+                    "enum": [
+                      "auto",
+                      "fast",
+                      "hi_res"
+                    ],
+                    "default": "auto",
+                    "description": "Processing strategy"
+                  },
+                  "special_csv": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Special CSV processing mode"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "ret": {
+                      "type": "object",
+                      "description": "Extracted content"
+                    },
+                    "sent_filename": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-workflow": {
+      "post": {
+        "summary": "Create workflow",
+        "description": "Create a new workflow for the agent builder",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[a-zA-Z0-9\\s\\-_.]+$",
+                    "description": "Workflow name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Workflow description"
+                  },
+                  "initial_dsl": {
+                    "type": "object",
+                    "description": "Initial DSL definition for the workflow"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "workflow": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "409": {
+            "description": "Duplicate workflow name"
+          }
+        }
+      }
+    },
+    "/get-workflow": {
+      "get": {
+        "summary": "Get workflow",
+        "description": "Get workflow by ID",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer",
+                    "description": "Workflow ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow retrieved"
+          },
+          "404": {
+            "description": "Workflow not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Get workflow (POST)",
+        "description": "Get workflow by ID",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer",
+                    "description": "Workflow ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow retrieved"
+          },
+          "404": {
+            "description": "Workflow not found"
+          }
+        }
+      }
+    },
+    "/list-workflows": {
+      "get": {
+        "summary": "List workflows",
+        "description": "List workflows for user with pagination",
+        "tags": [
+          "Agent Builder"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workflows listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "List workflows (POST)",
+        "description": "List workflows for user with pagination",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "default": 20,
+                    "maximum": 100
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflows listed"
+          }
+        }
+      }
+    },
+    "/delete-workflow": {
+      "delete": {
+        "summary": "Delete workflow",
+        "description": "Soft delete a workflow",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow deleted"
+          },
+          "404": {
+            "description": "Workflow not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Delete workflow (POST)",
+        "description": "Soft delete a workflow",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow deleted"
+          },
+          "404": {
+            "description": "Workflow not found"
+          }
+        }
+      }
+    },
+    "/save-workflow-version": {
+      "post": {
+        "summary": "Save workflow version",
+        "description": "Save a new version of workflow DSL",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id",
+                  "dsl_definition"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  },
+                  "dsl_definition": {
+                    "type": "object",
+                    "description": "DSL definition for the workflow version"
+                  },
+                  "changelog": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Version changelog"
+                  },
+                  "auto_save": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether this is an auto-save"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Version saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "version_number": {
+                          "type": "integer"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-workflow-version": {
+      "get": {
+        "summary": "Get workflow version",
+        "description": "Get workflow version DSL by version_id or workflow_id",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version_id": {
+                    "type": "integer",
+                    "description": "Specific version ID"
+                  },
+                  "workflow_id": {
+                    "type": "integer",
+                    "description": "Workflow ID (returns current version)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Version retrieved"
+          }
+        }
+      },
+      "post": {
+        "summary": "Get workflow version (POST)",
+        "description": "Get workflow version DSL by version_id or workflow_id",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version_id": {
+                    "type": "integer"
+                  },
+                  "workflow_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Version retrieved"
+          }
+        }
+      }
+    },
+    "/list-workflow-versions": {
+      "get": {
+        "summary": "List workflow versions",
+        "description": "List all versions of a workflow",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Versions listed"
+          }
+        }
+      },
+      "post": {
+        "summary": "List workflow versions (POST)",
+        "description": "List all versions of a workflow",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Versions listed"
+          }
+        }
+      }
+    },
+    "/create-agent": {
+      "post": {
+        "summary": "Create agent",
+        "description": "Create a new agent for the agent builder",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "primary_workflow_uuid"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[a-zA-Z0-9\\s\\-_.]+$"
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "agent_mode": {
+                    "type": "string",
+                    "enum": [
+                      "single"
+                    ],
+                    "default": "single",
+                    "description": "Agent execution mode (only 'single' currently supported)"
+                  },
+                  "primary_workflow_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID of the primary workflow"
+                  },
+                  "system_prompt": {
+                    "type": "string",
+                    "maxLength": 5000
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Default model for the agent"
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "default": 1.0
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "Agent variable definitions"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent created"
+          },
+          "409": {
+            "description": "Duplicate agent name"
+          }
+        }
+      }
+    },
+    "/get-agent": {
+      "get": {
+        "summary": "Get agent",
+        "description": "Get agent by ID",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent retrieved"
+          },
+          "404": {
+            "description": "Agent not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Get agent (POST)",
+        "description": "Get agent by ID",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent retrieved"
+          },
+          "404": {
+            "description": "Agent not found"
+          }
+        }
+      }
+    },
+    "/update-agent": {
+      "put": {
+        "summary": "Update agent",
+        "description": "Update agent configuration (creates new version)",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "primary_workflow_uuid": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "system_prompt": {
+                    "type": "string",
+                    "maxLength": 5000
+                  },
+                  "variables": {
+                    "type": "object"
+                  },
+                  "changelog": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent updated"
+          },
+          "404": {
+            "description": "Agent not found"
+          },
+          "409": {
+            "description": "Duplicate name"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update agent (POST)",
+        "description": "Update agent configuration (creates new version)",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "primary_workflow_uuid": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "system_prompt": {
+                    "type": "string",
+                    "maxLength": 5000
+                  },
+                  "variables": {
+                    "type": "object"
+                  },
+                  "changelog": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent updated"
+          },
+          "404": {
+            "description": "Agent not found"
+          },
+          "409": {
+            "description": "Duplicate name"
+          }
+        }
+      }
+    },
+    "/delete-agent": {
+      "delete": {
+        "summary": "Delete agent",
+        "description": "Soft delete an agent",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent deleted"
+          },
+          "404": {
+            "description": "Agent not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Delete agent (POST)",
+        "description": "Soft delete an agent",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "agent_id"
+                ],
+                "properties": {
+                  "agent_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent deleted"
+          },
+          "404": {
+            "description": "Agent not found"
+          }
+        }
+      }
+    },
+    "/list-node-templates": {
+      "get": {
+        "summary": "List node templates",
+        "description": "List available node templates for the workflow builder. Templates are dynamically generated from registered node classes.",
+        "tags": [
+          "Agent Builder"
+        ],
+        "responses": {
+          "200": {
+            "description": "Node templates listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list-executions": {
+      "get": {
+        "summary": "List executions",
+        "description": "List workflow execution history with optional filters and pagination",
+        "tags": [
+          "Agent Builder"
+        ],
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by workflow ID"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by execution status"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Executions listed"
+          }
+        }
+      },
+      "post": {
+        "summary": "List executions (POST)",
+        "description": "List workflow execution history",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 20,
+                    "maximum": 100
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Executions listed"
+          }
+        }
+      }
+    },
+    "/get-execution-details": {
+      "get": {
+        "summary": "Get execution details",
+        "description": "Get execution details with node logs",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "execution_id"
+                ],
+                "properties": {
+                  "execution_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Execution details retrieved"
+          },
+          "404": {
+            "description": "Execution not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Get execution details (POST)",
+        "description": "Get execution details with node logs",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "execution_id"
+                ],
+                "properties": {
+                  "execution_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Execution details retrieved"
+          },
+          "404": {
+            "description": "Execution not found"
+          }
+        }
+      }
+    },
+    "/update-workflow-metadata": {
+      "put": {
+        "summary": "Update workflow metadata",
+        "description": "Update workflow metadata (name, description, publish status, visibility). Does NOT update DSL - use /save-workflow-version for that.",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "is_published": {
+                    "type": "boolean"
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "private",
+                      "org",
+                      "team"
+                    ]
+                  },
+                  "changelog": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow metadata updated"
+          },
+          "404": {
+            "description": "Workflow not found"
+          },
+          "409": {
+            "description": "Duplicate name"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update workflow metadata (POST)",
+        "description": "Update workflow metadata",
+        "tags": [
+          "Agent Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "workflow_id"
+                ],
+                "properties": {
+                  "workflow_id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "is_published": {
+                    "type": "boolean"
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "private",
+                      "org",
+                      "team"
+                    ]
+                  },
+                  "changelog": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow metadata updated"
+          }
+        }
+      }
+    },
+    "/get-dataset-info": {
+      "post": {
+        "summary": "Get dataset info",
+        "description": "Returns metadata for a specific dataset, including is_tabular flag",
+        "tags": [
+          "Datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset"
+                ],
+                "properties": {
+                  "dataset": {
+                    "type": "string",
+                    "description": "Dataset name"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset info retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "classification": {
+                          "type": "string"
+                        },
+                        "is_tabular": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset not found"
+          }
+        }
+      }
+    },
+    "/get-dataset-results": {
+      "post": {
+        "summary": "Get dataset results",
+        "description": "Get search results from specified datasets",
+        "tags": [
+          "Datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "datasets"
+                ],
+                "properties": {
+                  "datasets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "List of datasets to search"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset results retrieved"
+          }
+        }
+      }
+    },
+    "/get-video-item": {
+      "post": {
+        "summary": "Get video item",
+        "description": "Securely retrieve generated video content. The user must own the requested video.",
+        "tags": [
+          "Files"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "Video ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Video content",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Video not found or access denied"
+          }
+        }
+      }
+    },
+    "/analyze-all-links": {
+      "post": {
+        "summary": "Analyze all links",
+        "description": "Analyzes all the links in the user's input and returns the analysis result",
+        "tags": [
+          "Utilities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Content containing links to analyze"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link analysis result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "error_count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-link-status": {
+      "post": {
+        "summary": "Check link status",
+        "description": "Checks the status of a given link and returns the HTTP status code",
+        "tags": [
+          "Utilities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "link"
+                ],
+                "properties": {
+                  "link": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL to check"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string",
+                      "description": "HTTP status code or 'error'"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/count-monthly-tokens-left-with-org": {
+      "post": {
+        "summary": "Get remaining monthly tokens with organization",
+        "description": "Returns the number of tokens remaining for the month, accounting for both user and organization limits",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Remaining tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "integer",
+                      "description": "Number of tokens remaining"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-and-upload-labels": {
+      "post": {
+        "summary": "Generate and upload labels",
+        "description": "Generate AI-powered labels for a chat session message and store them in the database",
+        "tags": [
+          "Utilities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "session_id",
+                  "message"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "description": "Chat session ID"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message to categorize"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Labels generated and stored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "session_id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-learning-videos": {
+      "get": {
+        "summary": "Get learning videos",
+        "description": "Returns a list of learning videos from a YouTube playlist. Results are cached.",
+        "tags": [
+          "Utilities"
+        ],
+        "responses": {
+          "200": {
+            "description": "Learning videos retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "object"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "cached": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Get learning videos (POST)",
+        "description": "Returns a list of learning videos from a YouTube playlist. Results are cached.",
+        "tags": [
+          "Utilities"
+        ],
+        "responses": {
+          "200": {
+            "description": "Learning videos retrieved"
+          }
+        }
+      }
+    },
+    "/train-tabular": {
+      "post": {
+        "summary": "Train tabular data",
+        "description": "Ingest tabular files (CSV/TSV/XLSX/XLSB) into the tabular database. Dedicated endpoint separate from /train-with-file.",
+        "tags": [
+          "Tabular Data"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file",
+                  "dataset"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Tabular file (CSV, TSV, XLSX, or XLSB)"
+                  },
+                  "dataset": {
+                    "type": "string",
+                    "description": "Target dataset name"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tabular data ingested successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "tabular": {
+                      "type": "boolean"
+                    },
+                    "dataset_id": {
+                      "type": "integer"
+                    },
+                    "file_id": {
+                      "type": "integer"
+                    },
+                    "table_count": {
+                      "type": "integer"
+                    },
+                    "total_rows": {
+                      "type": "integer"
+                    },
+                    "total_columns": {
+                      "type": "integer"
+                    },
+                    "tables": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "413": {
+            "description": "File too large"
+          }
+        }
+      }
+    },
+    "/query-tabular": {
+      "post": {
+        "summary": "Query tabular dataset",
+        "description": "Query a tabular dataset using natural language. Translates question to SQL, executes against tabular DB, narrates results.",
+        "tags": [
+          "Tabular Data"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset_id",
+                  "question",
+                  "model"
+                ],
+                "properties": {
+                  "dataset_id": {
+                    "type": "integer",
+                    "description": "ID of the tabular dataset"
+                  },
+                  "question": {
+                    "type": "string",
+                    "maxLength": 10000,
+                    "description": "Natural language question about the data"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use for SQL generation and narration"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "row_count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tabular-schema": {
+      "post": {
+        "summary": "Get tabular schema",
+        "description": "Returns tabular table schemas for a dataset",
+        "tags": [
+          "Tabular Data"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "dataset_id"
+                ],
+                "properties": {
+                  "dataset_id": {
+                    "type": "integer",
+                    "description": "Dataset ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Schema retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "table_name": {
+                            "type": "string"
+                          },
+                          "sheet_name": {
+                            "type": "string"
+                          },
+                          "column_count": {
+                            "type": "integer"
+                          },
+                          "row_count": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "schema": {
+                            "type": "object",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "table_count": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Models",
+      "description": "AI model management"
+    },
+    {
+      "name": "Completions",
+      "description": "Text generation and completions"
+    },
+    {
+      "name": "Agents",
+      "description": "Agent listing and execution"
+    },
+    {
+      "name": "Plugins",
+      "description": "Plugin execution and management"
+    },
+    {
+      "name": "Deep Agent",
+      "description": "Deep agent operations"
+    },
+    {
+      "name": "MCP Servers",
+      "description": "Model Context Protocol server management"
+    },
+    {
+      "name": "Configuration",
+      "description": "System configuration endpoints"
+    },
+    {
+      "name": "Datasets",
+      "description": "Knowledge dataset management"
+    },
+    {
+      "name": "Feedback",
+      "description": "User feedback operations"
+    },
+    {
+      "name": "Usage",
+      "description": "Token usage tracking"
+    },
+    {
+      "name": "Training",
+      "description": "Model training and content ingestion"
+    },
+    {
+      "name": "Secrets",
+      "description": "Secret management"
+    },
+    {
+      "name": "Audio",
+      "description": "Audio processing (TTS/STT)"
+    },
+    {
+      "name": "Files",
+      "description": "File processing and analysis"
+    },
+    {
+      "name": "Utilities",
+      "description": "Utility endpoints"
+    },
+    {
+      "name": "Agent Builder",
+      "description": "Agent builder workflow and agent management"
+    },
+    {
+      "name": "Tabular Data",
+      "description": "Tabular data ingestion and querying"
+    }
+  ]
+}
