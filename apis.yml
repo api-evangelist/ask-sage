@@ -434,6 +434,8 @@ apis:
   - type: APIReference
     url: https://docs.asksage.ai/api-docs/swagger.html
 common:
+- type: Overlay
+  url: overlays/ask-sage-server-overlay.yaml
 - type: Website
   url: https://www.asksage.ai/
 - type: DeveloperPortal
