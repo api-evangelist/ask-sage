@@ -1,0 +1,137 @@
+{
+  "item": [
+    {
+      "id": "f156008d-2ba6-44db-8de9-b005982a7bd9",
+      "name": "System",
+      "description": {
+        "content": "System utilities and health checks",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4b5e29d2-c2c5-41bf-8d96-78ae1da0a3bd",
+          "name": "Debug endpoint to view request headers",
+          "request": {
+            "name": "Debug endpoint to view request headers",
+            "description": {},
+            "url": {
+              "path": [
+                "get-headers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5640850b-2041-413f-aa94-de338b412505",
+              "name": "Headers displayed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get-headers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https://api.asksage.ai",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "{{baseUrl}}/server",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-access-tokens"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8eeaf62e-e9a3-4f57-882e-91905700e7fe",
+    "name": "Ask Sage Server Admin System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.\n\n## Base URL\n`https://api.asksage.ai`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token by authenticating through the User API (`/user/get-token-with-api-key`).\n\n## Message Format\nThe `message` field in API requests can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"what is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an...\"}]`\n\n## Key Features\n- **AI Completions** — Query multiple LLM providers with a unified interface\n- **Knowledge Training** — Upload documents, files, and data to build custom datasets\n- **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language\n- **Agent Builder** — Create, configure, and execute multi-step AI workflows\n- **Plugins** — Extend capabilities with built-in and custom plugins\n- **MCP Servers** — Connect to Model Context Protocol servers for tool integration\n\nContact Support:\n Name: Ask Sage Support\n Email: support@asksage.ai",
+      "type": "text/plain"
+    }
+  }
+}

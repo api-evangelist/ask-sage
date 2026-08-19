@@ -1,0 +1,586 @@
+{
+  "item": [
+    {
+      "id": "46d83c7b-42d7-45c1-8901-b7aec41e803a",
+      "name": "Plugins",
+      "description": {
+        "content": "Plugin execution and management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4ec820d6-b89d-44dc-9fc2-7abf057bccd4",
+          "name": "Execute a plugin",
+          "request": {
+            "name": "Execute a plugin",
+            "description": {
+              "content": "Execute a specific plugin with provided values",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "execute-plugin"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "plugin_name",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "(Required) Name of the plugin to execute"
+                },
+                {
+                  "key": "plugin_values",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "(Required) Plugin values as JSON string"
+                },
+                {
+                  "key": "model",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Model to use for plugin execution"
+                },
+                {
+                  "key": "live",
+                  "value": "0",
+                  "type": "text",
+                  "description": "Live mode setting (This can only be one of 0,1,2)"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4704f9b2-c66e-4302-86df-093798e3a713",
+              "name": "Plugin execution result (streaming)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "execute-plugin"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Name of the plugin to execute",
+                        "type": "text/plain"
+                      },
+                      "key": "plugin_name",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "(Required) Plugin values as JSON string",
+                        "type": "text/plain"
+                      },
+                      "key": "plugin_values",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Model to use for plugin execution",
+                        "type": "text/plain"
+                      },
+                      "key": "model",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Live mode setting (This can only be one of 0,1,2)",
+                        "type": "text/plain"
+                      },
+                      "key": "live",
+                      "value": "0",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3a257064-8fc8-4e39-a062-16903ee817c6",
+          "name": "Execute a plugin with file",
+          "request": {
+            "name": "Execute a plugin with file",
+            "description": {
+              "content": "Execute a plugin that requires file input",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "execute-plugin-with-file"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "plugin_name",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "(Required) Name of the plugin to execute"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "(Required) File to process with the plugin"
+                },
+                {
+                  "key": "plugin_values",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Plugin values as JSON string (optional)"
+                },
+                {
+                  "key": "model",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": "Model to use"
+                },
+                {
+                  "key": "live",
+                  "value": "0",
+                  "type": "text",
+                  "description": " (This can only be one of 0,1,2)"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "96290987-2566-4350-8e86-5af1e6db2b88",
+              "name": "Plugin execution result",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "execute-plugin-with-file"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) Name of the plugin to execute",
+                        "type": "text/plain"
+                      },
+                      "key": "plugin_name",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "(Required) File to process with the plugin",
+                        "type": "text/plain"
+                      },
+                      "key": "file",
+                      "value": "<binary>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Plugin values as JSON string (optional)",
+                        "type": "text/plain"
+                      },
+                      "key": "plugin_values",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "Model to use",
+                        "type": "text/plain"
+                      },
+                      "key": "model",
+                      "value": "<string>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": " (This can only be one of 0,1,2)",
+                        "type": "text/plain"
+                      },
+                      "key": "live",
+                      "value": "0",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"response\": \"string\",\n  \"message\": \"string\",\n  \"embedding_down\": true,\n  \"vectors_down\": false,\n  \"uuid\": \"string\",\n  \"references\": \"string\",\n  \"type\": \"string\",\n  \"added_obj\": {},\n  \"usage\": {},\n  \"status\": 2689\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "726654ad-ec36-4cf7-92ec-16b9fff63508",
+          "name": "Get available plugins",
+          "request": {
+            "name": "Get available plugins",
+            "description": {
+              "content": "Returns a list of available plugins",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get-plugins"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e29f8d5f-b993-464d-9a60-afca21887c37",
+              "name": "List of plugins",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get-plugins"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"response\": [\n    {\n      \"id\": \"string\",\n      \"plugin_name\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"category\": \"string\",\n      \"file_mode\": true,\n      \"paid_only\": false,\n      \"regex\": \"string\",\n      \"prompt_template\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"plugin_name\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"category\": \"string\",\n      \"file_mode\": true,\n      \"paid_only\": false,\n      \"regex\": \"string\",\n      \"prompt_template\": \"string\"\n    }\n  ],\n  \"status\": 2322\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7b69f435-c915-4030-944d-fd776fff1a25",
+          "name": "Get available plugins",
+          "request": {
+            "name": "Get available plugins",
+            "description": {
+              "content": "Returns a list of available plugins",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get-plugins"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6b965759-b36f-46f8-85aa-988825b5ad6e",
+              "name": "List of plugins",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get-plugins"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"response\": [\n    {\n      \"id\": \"string\",\n      \"plugin_name\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"category\": \"string\",\n      \"file_mode\": true,\n      \"paid_only\": false,\n      \"regex\": \"string\",\n      \"prompt_template\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"plugin_name\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"category\": \"string\",\n      \"file_mode\": true,\n      \"paid_only\": false,\n      \"regex\": \"string\",\n      \"prompt_template\": \"string\"\n    }\n  ],\n  \"status\": 2322\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https://api.asksage.ai",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "{{baseUrl}}/server",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-access-tokens"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "29ce7a4d-f0a1-4353-8aff-586ab50c2a7e",
+    "name": "Ask Sage Server Admin Plugins API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.\n\n## Base URL\n`https://api.asksage.ai`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token by authenticating through the User API (`/user/get-token-with-api-key`).\n\n## Message Format\nThe `message` field in API requests can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"what is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an...\"}]`\n\n## Key Features\n- **AI Completions** — Query multiple LLM providers with a unified interface\n- **Knowledge Training** — Upload documents, files, and data to build custom datasets\n- **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language\n- **Agent Builder** — Create, configure, and execute multi-step AI workflows\n- **Plugins** — Extend capabilities with built-in and custom plugins\n- **MCP Servers** — Connect to Model Context Protocol servers for tool integration\n\nContact Support:\n Name: Ask Sage Support\n Email: support@asksage.ai",
+      "type": "text/plain"
+    }
+  }
+}

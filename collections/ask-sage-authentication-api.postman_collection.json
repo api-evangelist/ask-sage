@@ -1,0 +1,160 @@
+{
+  "item": [
+    {
+      "id": "a8584ef2-07cb-4611-bdef-415b7b9214af",
+      "name": "Authentication",
+      "description": {
+        "content": "User authentication and authorization",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8969256f-60dc-4ba1-9906-5be175112990",
+          "name": "Get token using API key",
+          "request": {
+            "name": "Get token using API key",
+            "description": {},
+            "url": {
+              "path": [
+                "get-token-with-api-key"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<email>\",\n  \"api_key\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3661414e-3287-459f-87d1-0d607b1a7b3f",
+              "name": "Token generated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get-token-with-api-key"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<email>\",\n  \"api_key\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https://api.asksage.ai",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "{{baseUrl}}/server",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-access-tokens"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e503b442-ca3e-49c0-889d-5a1cc07843f8",
+    "name": "Ask Sage Server Admin Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.\n\n## Base URL\n`https://api.asksage.ai`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token by authenticating through the User API (`/user/get-token-with-api-key`).\n\n## Message Format\nThe `message` field in API requests can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"what is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an...\"}]`\n\n## Key Features\n- **AI Completions** — Query multiple LLM providers with a unified interface\n- **Knowledge Training** — Upload documents, files, and data to build custom datasets\n- **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language\n- **Agent Builder** — Create, configure, and execute multi-step AI workflows\n- **Plugins** — Extend capabilities with built-in and custom plugins\n- **MCP Servers** — Connect to Model Context Protocol servers for tool integration\n\nContact Support:\n Name: Ask Sage Support\n Email: support@asksage.ai",
+      "type": "text/plain"
+    }
+  }
+}

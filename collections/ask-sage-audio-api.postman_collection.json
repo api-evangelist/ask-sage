@@ -1,0 +1,171 @@
+{
+  "item": [
+    {
+      "id": "4aaa9f67-f86d-41fd-867a-eacced37d6aa",
+      "name": "Audio",
+      "description": {
+        "content": "Audio processing (TTS/STT)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d0263dd0-1ce1-4c9e-983b-71bdc78cea94",
+          "name": "Convert text to speech",
+          "request": {
+            "name": "Convert text to speech",
+            "description": {
+              "content": "Generate audio from text using text-to-speech",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get-text-to-speech"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                  "type": "any",
+                  "value": "{{baseUrl}}",
+                  "key": "baseUrl"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "audio/mpeg"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"<string>\",\n  \"voice\": \"alloy\",\n  \"model\": \"tts-hd\",\n  \"provider\": \"<string>\",\n  \"language_code\": \"en-US\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7ba90fc5-2894-4fba-a937-6d1abb3f14bb",
+              "name": "Audio file",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get-text-to-speech"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+                      "type": "any",
+                      "value": "{{baseUrl}}",
+                      "key": "baseUrl"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-access-tokens",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "audio/mpeg"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"text\": \"<string>\",\n  \"voice\": \"alloy\",\n  \"model\": \"tts-hd\",\n  \"provider\": \"<string>\",\n  \"language_code\": \"en-US\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "audio/mpeg"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "API base URL. Use https://api.asksage.ai for production, or your self-hosted instance URL.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "https://api.asksage.ai",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "{{baseUrl}}/server",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-access-tokens"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "bb54e6ad-9e0a-4233-ae73-70c557338d47",
+    "name": "Ask Sage Server Admin Audio API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.\n\n## Base URL\n`https://api.asksage.ai`\n\n## Authentication\nAll endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.\n\nObtain a token by authenticating through the User API (`/user/get-token-with-api-key`).\n\n## Message Format\nThe `message` field in API requests can be either:\n- A single string prompt: `\"What is Ask Sage?\"`\n- An array of conversation messages: `[{\"user\": \"me\", \"message\": \"what is Ask Sage?\"}, {\"user\": \"gpt\", \"message\": \"Ask Sage is an...\"}]`\n\n## Key Features\n- **AI Completions** — Query multiple LLM providers with a unified interface\n- **Knowledge Training** — Upload documents, files, and data to build custom datasets\n- **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language\n- **Agent Builder** — Create, configure, and execute multi-step AI workflows\n- **Plugins** — Extend capabilities with built-in and custom plugins\n- **MCP Servers** — Connect to Model Context Protocol servers for tool integration\n\nContact Support:\n Name: Ask Sage Support\n Email: support@asksage.ai",
+      "type": "text/plain"
+    }
+  }
+}

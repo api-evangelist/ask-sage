@@ -1,0 +1,239 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Admin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get total purchased tokens for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-total-purchased-tokens-organization"
+          },
+          "docs": "Get total purchased tokens for organization"
+        },
+        {
+          "info": {
+            "name": "Get used tokens for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-used-tokens-for-organization"
+          },
+          "docs": "Get used tokens for organization"
+        },
+        {
+          "info": {
+            "name": "Get datasets for user (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get datasets for user (admin)"
+        },
+        {
+          "info": {
+            "name": "Export organization users to CSV",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-export-users-csv",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Export organization users to CSV"
+        },
+        {
+          "info": {
+            "name": "Verify user email (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-update-user-verified",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verify user email (admin)"
+        },
+        {
+          "info": {
+            "name": "Update user paid status (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-update-user-paid",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user paid status (admin)"
+        },
+        {
+          "info": {
+            "name": "Ban/unban user (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-update-user-banned",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ban/unban user (admin)"
+        },
+        {
+          "info": {
+            "name": "Update user token limit (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-update-user-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user token limit (admin)"
+        },
+        {
+          "info": {
+            "name": "Update user training token limit (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-update-user-train-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user training token limit (admin)"
+        },
+        {
+          "info": {
+            "name": "Get token usage statistics (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-token-stats"
+          },
+          "docs": "Get token usage statistics (admin)"
+        },
+        {
+          "info": {
+            "name": "Get user count for organization (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-user-count",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get user count for organization (admin)"
+        },
+        {
+          "info": {
+            "name": "Get all organization users with token info (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-all-users-with-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get all organization users with token info (admin)"
+        },
+        {
+          "info": {
+            "name": "Get user logs (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-all-logs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get user logs (admin)"
+        },
+        {
+          "info": {
+            "name": "Get token requests (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-get-token-requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get token requests for the admin's organization"
+        },
+        {
+          "info": {
+            "name": "Review token request (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-review-token-request",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Approve or deny a pending token request"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

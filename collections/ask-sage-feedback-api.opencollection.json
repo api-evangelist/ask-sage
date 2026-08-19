@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Feedback API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feedback",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Vote down a response (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/vote-down"
+          },
+          "docs": "Mark a response as unhelpful or incorrect"
+        },
+        {
+          "info": {
+            "name": "Vote down a response",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/vote-down",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mark a response as unhelpful or incorrect"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

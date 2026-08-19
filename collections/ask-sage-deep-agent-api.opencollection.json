@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Deep Agent API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Deep Agent",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get deep agent updates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-deep-agent",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get streaming updates from a deep agent"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Execute Agent API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Execute Agent",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/execute-agent",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a specific agent with a message and optional parameters. Supports both non-streaming (JSON) and streaming (Server-Sent Events) responses.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Usage API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get monthly token usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/count-monthly-tokens"
+          },
+          "docs": "Returns the count of tokens used this month"
+        },
+        {
+          "info": {
+            "name": "Get monthly token usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/count-monthly-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns the count of tokens used this month for specific app"
+        },
+        {
+          "info": {
+            "name": "Get monthly teaching token usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/count-monthly-teach-tokens"
+          },
+          "docs": "Returns the count of teaching/training tokens used this month"
+        },
+        {
+          "info": {
+            "name": "Get monthly teaching token usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/count-monthly-teach-tokens"
+          },
+          "docs": "Returns the count of teaching/training tokens used this month"
+        },
+        {
+          "info": {
+            "name": "Get remaining monthly tokens with organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/count-monthly-tokens-left-with-org"
+          },
+          "docs": "Returns the number of tokens remaining for the month, accounting for both user and organization limits"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Utilities API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Utilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Count tokens (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/tokenizer"
+          },
+          "docs": "Get token count for provided content"
+        },
+        {
+          "info": {
+            "name": "Count tokens",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/tokenizer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get token count for provided content"
+        },
+        {
+          "info": {
+            "name": "Analyze all links",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/analyze-all-links",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Analyzes all the links in the user's input and returns the analysis result"
+        },
+        {
+          "info": {
+            "name": "Check link status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/check-link-status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Checks the status of a given link and returns the HTTP status code"
+        },
+        {
+          "info": {
+            "name": "Generate and upload labels",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-and-upload-labels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate AI-powered labels for a chat session message and store them in the database"
+        },
+        {
+          "info": {
+            "name": "Get learning videos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/get-learning-videos"
+          },
+          "docs": "Returns a list of learning videos from a YouTube playlist. Results are cached."
+        },
+        {
+          "info": {
+            "name": "Get learning videos (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-learning-videos"
+          },
+          "docs": "Returns a list of learning videos from a YouTube playlist. Results are cached."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

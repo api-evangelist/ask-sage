@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Allocation API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Allocation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get allocation policy (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-allocation-policy-get"
+          },
+          "docs": "Get allocation policy (admin)"
+        },
+        {
+          "info": {
+            "name": "Update allocation policy (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-allocation-policy-update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update allocation policy (admin)"
+        },
+        {
+          "info": {
+            "name": "Preview token distribution (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-token-distribution-preview"
+          },
+          "docs": "Preview token distribution (admin)"
+        },
+        {
+          "info": {
+            "name": "Execute token distribution (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-token-distribution-execute"
+          },
+          "docs": "Execute token distribution (admin)"
+        },
+        {
+          "info": {
+            "name": "Get allocation dashboard (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-allocation-dashboard"
+          },
+          "docs": "Get allocation dashboard (admin)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

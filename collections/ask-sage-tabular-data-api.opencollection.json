@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Tabular Data API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tabular Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Train tabular data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/train-tabular",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "dataset",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Ingest tabular files (CSV/TSV/XLSX/XLSB) into the tabular database. Dedicated endpoint separate from /train-with-file."
+        },
+        {
+          "info": {
+            "name": "Query tabular dataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/query-tabular",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Query a tabular dataset using natural language. Translates question to SQL, executes against tabular DB, narrates results."
+        },
+        {
+          "info": {
+            "name": "Get tabular schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/tabular-schema",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns tabular table schemas for a dataset"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

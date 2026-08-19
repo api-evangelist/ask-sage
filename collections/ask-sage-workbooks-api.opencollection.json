@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Workbooks API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workbooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create workbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{baseUrl}/server/workbook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create workbook"
+        },
+        {
+          "info": {
+            "name": "Delete workbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{baseUrl}/server/workbook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete workbook"
+        },
+        {
+          "info": {
+            "name": "Update workbook chats",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/workbook-chats",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update workbook chats"
+        },
+        {
+          "info": {
+            "name": "Update workbook summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/workbook-summary",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update workbook summary"
+        },
+        {
+          "info": {
+            "name": "Get workbooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-workbooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get workbooks"
+        },
+        {
+          "info": {
+            "name": "Assign workbook to user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/assign-workbook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign workbook to user"
+        },
+        {
+          "info": {
+            "name": "Remove workbook assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/deassign-workbook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove workbook assignment"
+        },
+        {
+          "info": {
+            "name": "Get workbook assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-workbook-assignments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get workbook assignments"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

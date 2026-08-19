@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Memos API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Memos",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add memo to workbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{baseUrl}/server/memo",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add memo to workbook"
+        },
+        {
+          "info": {
+            "name": "Delete memo",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{baseUrl}/server/memo",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete memo"
+        },
+        {
+          "info": {
+            "name": "Get memos for workbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-memos",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get memos for workbook"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

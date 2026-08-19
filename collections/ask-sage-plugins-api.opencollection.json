@@ -1,0 +1,125 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Plugins API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Plugins",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute a plugin",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/execute-plugin",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "plugin_name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "plugin_values",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "model",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "live",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Execute a specific plugin with provided values"
+        },
+        {
+          "info": {
+            "name": "Execute a plugin with file",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/execute-plugin-with-file",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "plugin_name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "plugin_values",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "model",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "live",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Execute a plugin that requires file input"
+        },
+        {
+          "info": {
+            "name": "Get available plugins",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/get-plugins"
+          },
+          "docs": "Returns a list of available plugins"
+        },
+        {
+          "info": {
+            "name": "Get available plugins",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-plugins"
+          },
+          "docs": "Returns a list of available plugins"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

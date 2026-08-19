@@ -2,49 +2,52 @@ generated: '2026-07-18'
 method: derived
 status: candidate
 source: openapi/ask-sage-server-openapi.json
-note: >-
-  No official first-party hosted/remote Ask Sage MCP server was located. Ask Sage
-  is an MCP *client host* (it lets users register external MCP servers via the
-  Server API add-mcp-server / list-mcp-servers / list-mcp-tools endpoints, plus
-  Microsoft 365, GitHub, and Box MCP integrations documented at
-  docs.asksage.ai/docs/v1/mcp-documentation/). The tool list below is a CANDIDATE
-  derived from core Server API operations so an agent could wrap the Ask Sage API
-  itself as an MCP server.
+note: No official first-party hosted/remote Ask Sage MCP server was located. Ask Sage is an MCP *client
+  host* (it lets users register external MCP servers via the Server API add-mcp-server / list-mcp-servers
+  / list-mcp-tools endpoints, plus Microsoft 365, GitHub, and Box MCP integrations documented at docs.asksage.ai/docs/v1/mcp-documentation/).
+  The tool list below is a CANDIDATE derived from core Server API operations so an agent could wrap the
+  Ask Sage API itself as an MCP server.
 server:
   name: ask-sage
   transport: http
   url: null
 tools:
-  - name: get_models
-    description: List AI models available to the account
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-models
-  - name: query
-    description: Send a prompt to a model and receive a completion
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1query
-  - name: query_with_file
-    description: Generate a completion with file attachments
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1query_with_file
-  - name: get_personas
-    description: List available AI personas
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-personas
-  - name: get_datasets
-    description: List available datasets
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-datasets
-  - name: get_plugins
-    description: List available plugins
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-plugins
-  - name: execute_plugin
-    description: Execute a plugin with provided content
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1execute-plugin
-  - name: list_agents
-    description: List agents available to the user
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1list-agents
-  - name: execute_agent
-    description: Execute an agent with a message and optional variables
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1execute-agent
-  - name: tokenizer
-    description: Count tokens for a string value
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1tokenizer
-  - name: count_monthly_tokens
-    description: Return count of tokens used this month
-    source_operation: openapi/ask-sage-server-openapi.json#/paths/~1count-monthly-tokens
+- name: get_models
+  description: List AI models available to the account
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-models
+- name: query
+  description: Send a prompt to a model and receive a completion
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1query
+- name: query_with_file
+  description: Generate a completion with file attachments
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1query_with_file
+- name: get_personas
+  description: List available AI personas
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-personas
+- name: get_datasets
+  description: List available datasets
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-datasets
+- name: get_plugins
+  description: List available plugins
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1get-plugins
+- name: execute_plugin
+  description: Execute a plugin with provided content
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1execute-plugin
+- name: list_agents
+  description: List agents available to the user
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1list-agents
+- name: execute_agent
+  description: Execute an agent with a message and optional variables
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1execute-agent
+- name: tokenizer
+  description: Count tokens for a string value
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1tokenizer
+- name: count_monthly_tokens
+  description: Return count of tokens used this month
+  source_operation: openapi/ask-sage-server-openapi.json#/paths/~1count-monthly-tokens
+deployment:
+  mode: none
+  verified: derived
+  tools: 11
+  checked: '2026-08-12'
+  source: catalog MCP census

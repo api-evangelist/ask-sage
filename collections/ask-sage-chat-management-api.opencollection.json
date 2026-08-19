@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Chat Management API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Chat Management",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all chat sessions for user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-chats"
+          },
+          "docs": "Get all chat sessions for user"
+        },
+        {
+          "info": {
+            "name": "Get specific chat session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-chat-session",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get specific chat session"
+        },
+        {
+          "info": {
+            "name": "Delete chat session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/delete-chat-session",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete chat session"
+        },
+        {
+          "info": {
+            "name": "Append chat message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/append-chat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Append chat message"
+        },
+        {
+          "info": {
+            "name": "Copy chat session to another user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/copy-chat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Copy chat session to another user"
+        },
+        {
+          "info": {
+            "name": "Create new chat session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/create-chat-session"
+          },
+          "docs": "Create new chat session"
+        },
+        {
+          "info": {
+            "name": "Update chat session title",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/update-chat-session-title",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update chat session title"
+        },
+        {
+          "info": {
+            "name": "Update chat session JSON data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/update-chat-session-json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update chat session JSON data"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

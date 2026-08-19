@@ -1,0 +1,175 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin MCP Servers API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MCP Servers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add MCP server (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/add-mcp-server"
+          },
+          "docs": "Add a new MCP (Model Context Protocol) server for the user (GET method supported)"
+        },
+        {
+          "info": {
+            "name": "Add MCP server",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/add-mcp-server",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a new MCP (Model Context Protocol) server for the user"
+        },
+        {
+          "info": {
+            "name": "Update MCP server",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{baseUrl}/server/update-mcp-server",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing MCP server configuration"
+        },
+        {
+          "info": {
+            "name": "List user's MCP servers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/list-mcp-servers",
+            "params": [
+              {
+                "name": "include_inactive",
+                "value": "",
+                "type": "query",
+                "description": "Include inactive servers in the list"
+              }
+            ]
+          },
+          "docs": "Get a list of all MCP servers configured for the user"
+        },
+        {
+          "info": {
+            "name": "List user's MCP servers (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/list-mcp-servers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a list of all MCP servers configured for the user"
+        },
+        {
+          "info": {
+            "name": "List whitelisted MCP servers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/list-mcp-whitelisted-servers"
+          },
+          "docs": "Get a list of all whitelisted MCP servers"
+        },
+        {
+          "info": {
+            "name": "List whitelisted MCP servers (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/list-mcp-whitelisted-servers"
+          },
+          "docs": "Get a list of all whitelisted MCP servers"
+        },
+        {
+          "info": {
+            "name": "List MCP tools",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/list-mcp-tools"
+          },
+          "docs": "Get a list of all available MCP tools from configured servers"
+        },
+        {
+          "info": {
+            "name": "List MCP tools (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/list-mcp-tools"
+          },
+          "docs": "Get a list of all available MCP tools from configured servers"
+        },
+        {
+          "info": {
+            "name": "Delete MCP server (POST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/delete-mcp-server",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Soft delete an MCP server by setting it as inactive"
+        },
+        {
+          "info": {
+            "name": "Delete MCP server",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{baseUrl}/server/delete-mcp-server",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Soft delete an MCP server by setting it as inactive"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

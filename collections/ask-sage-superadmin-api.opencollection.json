@@ -1,0 +1,864 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Superadmin API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Superadmin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all users with token info (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-all-users-with-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get all users with token info (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Export all users to CSV (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-export-users-csv"
+          },
+          "docs": "Export all users to CSV (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get users (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-users",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get users (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get total user count (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-user-count",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get total user count (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get system statistics (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-stats"
+          },
+          "docs": "Get system statistics (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get token usage statistics (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-token-stats"
+          },
+          "docs": "Get token usage statistics (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get system logs (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-all-logs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get system logs (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Verify user email (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-verified",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verify user email (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Ban/unban user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-banned",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ban/unban user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update user paid status (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-paid",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user paid status (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Grant/revoke admin privileges (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-admin",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Grant/revoke admin privileges (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update user token limit (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user token limit (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update user training token limit (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-user-train-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update user training token limit (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Change user email (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-change-email",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change user email (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Assign payer email to user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-assign-payer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign payer email to user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Remove user from organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-deassign-organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove user from organization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Enable/disable CUI MFA authorization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-cuimfa",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enable/disable CUI MFA authorization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Delete user's last chat session (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-delete-last-chatsession",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete user's last chat session (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Reset user MFA (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-reset-mfa",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reset user MFA (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Reset user CAC (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-reset-cac",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reset user CAC (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Reset user password (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-reset-pw",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reset user password (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Assign dataset to user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-assign-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign dataset to user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Remove dataset from user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-deassign-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove dataset from user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get user datasets (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get user datasets (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Delete dataset from all users (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-delete-all-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete dataset from all users (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Assign persona to user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-assign-persona",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign persona to user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Assign plugin to user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-assign-plugin",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign plugin to user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get user API keys (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-user-api-keys",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get user API keys (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Create API key for user (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-user-api-key",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create API key for user (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get all organizations (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-all-organizations"
+          },
+          "docs": "Get all organizations (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Add new organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-add-organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add new organization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{baseUrl}/server/superadmin-update-organization/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update organization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get organization details (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/superadmin-get-organization/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get organization details (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Assign users to organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-assign-users-to-organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign users to organization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Add organization purchase (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-add-organization-purchase",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add organization purchase (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update organization purchase (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{baseUrl}/server/superadmin-update-organization-purchase/:purchase_id",
+            "params": [
+              {
+                "name": "purchase_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update organization purchase (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get organization purchases (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-organization-purchases/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get organization purchases (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Import sales data from Excel (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-update-sales",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Import sales data from Excel (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Export weekly organization report (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-export-weekly-reports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Export weekly organization report (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Export model usage report (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-export-weekly-model-usage-csv",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Export model usage report (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get allocation policy (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-allocation-policy-get",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get allocation policy (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Update allocation policy (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-allocation-policy-update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update allocation policy (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Preview token distribution (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-token-distribution-preview",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Preview token distribution (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Execute token distribution (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-token-distribution-execute",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute token distribution (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get allocation dashboard (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-allocation-dashboard",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get allocation dashboard (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get all datasets (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-all-datasets",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get all datasets (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get dataset files (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-dataset-files",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get dataset files (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get dataset statistics (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-dataset-statistics"
+          },
+          "docs": "Get dataset statistics (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get dataset details (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-dataset-details",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get dataset details (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Export datasets to CSV (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-export-datasets-csv"
+          },
+          "docs": "Export datasets to CSV (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get analytics data (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-analytics-data",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get analytics data (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Export label usage to CSV (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-export-label-usage-csv"
+          },
+          "docs": "Export label usage to CSV (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get token requests (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-get-token-requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get token requests (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Review token request (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-review-token-request",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Review token request (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get total purchased tokens for organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-total-purchased-tokens-organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get total purchased tokens for organization (superadmin)"
+        },
+        {
+          "info": {
+            "name": "Get used tokens for organization (superadmin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/superadmin-used-tokens-for-organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get used tokens for organization (superadmin)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

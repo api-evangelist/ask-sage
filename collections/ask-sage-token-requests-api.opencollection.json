@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Token Requests API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Token Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Request more tokens",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/request-tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a request for additional tokens. May be auto-approved if an auto-approval rule is configured."
+        },
+        {
+          "info": {
+            "name": "Get my token requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-my-token-requests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get the current user's token request history"
+        },
+        {
+          "info": {
+            "name": "Get auto-approval rule (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-auto-approval-rule-get"
+          },
+          "docs": "Get auto-approval rule (admin)"
+        },
+        {
+          "info": {
+            "name": "Update auto-approval rule (admin)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/admin-auto-approval-rule-update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update auto-approval rule (admin)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

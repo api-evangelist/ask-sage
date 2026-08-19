@@ -1,0 +1,178 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Completions API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Completions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate completion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/query",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Main endpoint for generating AI completions. \nThe message field can be either a string or an array of conversation messages.\n"
+        },
+        {
+          "info": {
+            "name": "Generate completion with file attachments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/query_with_file",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "message",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "persona",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "tools",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "enabled_mcp_tools",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "tools_to_execute",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "tool_choice",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "reasoning_effort",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "system_prompt",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "mode",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "deep_agent_id",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "dataset",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "limit_references",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "temperature",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "model",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "live",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "streaming",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "usage",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "timezone",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Generate AI completion with one or more file attachments. Supports multiple files.\nMaximum file size: 500MB per file. Maximum number of files determined by server configuration.\n"
+        },
+        {
+          "info": {
+            "name": "Generate follow-up questions (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/follow-up-questions"
+          },
+          "docs": "Generate relevant follow-up questions based on the conversation"
+        },
+        {
+          "info": {
+            "name": "Generate follow-up questions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/follow-up-questions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate relevant follow-up questions based on the conversation"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

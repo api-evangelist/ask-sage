@@ -1,0 +1,145 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ask Sage Server Admin Datasets API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-access-tokens",
+      "value": "{{x-access-tokens}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Datasets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get available datasets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/get-datasets"
+          },
+          "docs": "Returns a list of available knowledge datasets"
+        },
+        {
+          "info": {
+            "name": "Get available datasets",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-datasets"
+          },
+          "docs": "Returns a list of available knowledge datasets"
+        },
+        {
+          "info": {
+            "name": "Delete a dataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{baseUrl}/server/dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete a specific dataset"
+        },
+        {
+          "info": {
+            "name": "Delete file from dataset (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{baseUrl}/server/delete-filename-from-dataset"
+          },
+          "docs": "Remove a specific file from a dataset"
+        },
+        {
+          "info": {
+            "name": "Delete file from dataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/delete-filename-from-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove a specific file from a dataset"
+        },
+        {
+          "info": {
+            "name": "Get all ingested files",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-all-files-ingested"
+          },
+          "docs": "Returns a list of all files that have been ingested"
+        },
+        {
+          "info": {
+            "name": "Copy files to dataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/copy-files-dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Copy files from one dataset to another"
+        },
+        {
+          "info": {
+            "name": "Get dataset info",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-dataset-info",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns metadata for a specific dataset, including is_tabular flag"
+        },
+        {
+          "info": {
+            "name": "Get dataset results",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{baseUrl}/server/get-dataset-results",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get search results from specified datasets"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
