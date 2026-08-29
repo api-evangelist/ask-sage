@@ -1,0 +1,34 @@
+slug: ask-sage
+provider: Ask Sage
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: API Key Management
+  spec_file: ask-sage-api-key-management-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.75
+  evidence: '''Create new API key'', ''Get user API keys'', ''Delete API key'''
+  reason: Issuance and revocation of API credentials for consumers of the platform's public API maps to
+    Developer Identity & Credential Management. Could alternatively be read as general IAM, hence moderate
+    confidence.
+- tag: Execute Agent
+  spec_file: ask-sage-execute-agent-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /execute-agent "Execute Agent"; schemas AgentExecutionResponse, ExecutionError
+  reason: Runs AI agents on an LLM platform — operational use of AI/ML models, the closest cross-industry
+    capability available.
