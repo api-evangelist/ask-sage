@@ -100,7 +100,7 @@ apis:
   humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
   baseURL: https://api.asksage.ai/server
   tags:
-  - Allocations
+  - Allocation
   tags_raw:
   - Allocation
   properties:
