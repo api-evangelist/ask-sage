@@ -51,7 +51,7 @@ tags:
 - Company
 - Artificial Intelligence
 - Generative AI
-- Large Language Models
+- LLM
 - Government
 - Defense
 - Compliance
@@ -273,6 +273,8 @@ apis:
   humanURL: https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html
   baseURL: https://api.asksage.ai/server
   tags:
+  - MCP Server
+  tags_raw:
   - MCP Servers
   properties:
   - type: OpenAPI
