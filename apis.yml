@@ -465,6 +465,8 @@ apis:
   - type: APIReference
     url: https://docs.asksage.ai/api-docs/swagger.html
 common:
+- type: Plans
+  url: plans/ask-sage-plans-pricing.yml
 - type: CapabilityMap
   url: capabilities/ask-sage-capability-edges.yml
   name: Ask Sage Business Capability Map

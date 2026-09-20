@@ -1,0 +1,17 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://www.asksage.ai/how-to-buy/
+sources:
+- https://www.asksage.ai/how-to-buy/
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T120317
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: negotiated
+published: false
+note: No numeric price is published on the pricing page; Procurement/how-to-buy page listing marketplaces
+  and government contract vehicles; no numeric prices shown.
+plan_count: 0
+plans: []
