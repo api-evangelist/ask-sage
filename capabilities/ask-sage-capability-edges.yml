@@ -11,8 +11,29 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 2
+edge_count: 4
 edges:
+- tag: API Key Management
+  spec_file: ask-sage-api-key-management-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.75
+  evidence: '''Create new API key'', ''Get user API keys'', ''Delete API key'''
+  reason: Issuance and revocation of API credentials for consumers of the platform's public API maps to
+    Developer Identity & Credential Management. Could alternatively be read as general IAM, hence moderate
+    confidence.
+  recovered_from: sweep-20260829T005356Z-edges.json
+- tag: Execute Agent
+  spec_file: ask-sage-execute-agent-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /execute-agent "Execute Agent"; schemas AgentExecutionResponse, ExecutionError
+  reason: Runs AI agents on an LLM platform — operational use of AI/ML models, the closest cross-industry
+    capability available.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Superadmin
   spec_file: ask-sage-superadmin-api-openapi.yml
   capability_id: BC-620.20
