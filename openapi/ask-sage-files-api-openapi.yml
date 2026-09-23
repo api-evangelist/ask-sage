@@ -1,44 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin Files API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage Server Files API
+  description: Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
   version: '2.0'
   contact:
     name: Ask Sage Support
@@ -105,6 +68,8 @@ paths:
                     type: string
                   status:
                     type: integer
+      operationId: postFile
+      x-operation-id-source: derived
   /get-video-item:
     post:
       summary: Get video item
@@ -133,6 +98,8 @@ paths:
                 format: binary
         '404':
           description: Video not found or access denied
+      operationId: postGetVideoItem
+      x-operation-id-source: derived
 components:
   securitySchemes:
     ApiKeyAuth:

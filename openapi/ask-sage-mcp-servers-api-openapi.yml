@@ -1,44 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin MCP Servers API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage Server MCP Servers API
+  description: Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
   version: '2.0'
   contact:
     name: Ask Sage Support
@@ -83,6 +46,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: postAddMcpServer
+      x-operation-id-source: derived
     get:
       summary: Add MCP server (GET)
       description: Add a new MCP (Model Context Protocol) server for the user (GET method supported)
@@ -102,6 +67,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: getAddMcpServer
+      x-operation-id-source: derived
   /update-mcp-server:
     put:
       summary: Update MCP server
@@ -136,6 +103,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: putUpdateMcpServer
+      x-operation-id-source: derived
   /list-mcp-servers:
     get:
       summary: List user's MCP servers
@@ -165,6 +134,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: getListMcpServers
+      x-operation-id-source: derived
     post:
       summary: List user's MCP servers (POST)
       description: Get a list of all MCP servers configured for the user
@@ -196,6 +167,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: postListMcpServers
+      x-operation-id-source: derived
   /list-mcp-whitelisted-servers:
     get:
       summary: List whitelisted MCP servers
@@ -216,6 +189,8 @@ paths:
                       type: string
                   status:
                     type: integer
+      operationId: getListMcpWhitelistedServers
+      x-operation-id-source: derived
     post:
       summary: List whitelisted MCP servers (POST)
       description: Get a list of all whitelisted MCP servers
@@ -235,6 +210,8 @@ paths:
                       type: string
                   status:
                     type: integer
+      operationId: postListMcpWhitelistedServers
+      x-operation-id-source: derived
   /list-mcp-tools:
     get:
       summary: List MCP tools
@@ -257,6 +234,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: getListMcpTools
+      x-operation-id-source: derived
     post:
       summary: List MCP tools (POST)
       description: Get a list of all available MCP tools from configured servers
@@ -278,6 +257,8 @@ paths:
                     type: integer
                   status:
                     type: integer
+      operationId: postListMcpTools
+      x-operation-id-source: derived
   /delete-mcp-server:
     delete:
       summary: Delete MCP server
@@ -312,6 +293,8 @@ paths:
                     type: integer
         '404':
           description: Server not found or access denied
+      operationId: deleteDeleteMcpServer
+      x-operation-id-source: derived
     post:
       summary: Delete MCP server (POST)
       description: Soft delete an MCP server by setting it as inactive
@@ -345,6 +328,8 @@ paths:
                     type: integer
         '404':
           description: Server not found or access denied
+      operationId: postDeleteMcpServer
+      x-operation-id-source: derived
 components:
   schemas:
     MCPServer:

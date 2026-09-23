@@ -1,52 +1,15 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin Superadmin API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage User Superadmin API
+  description: Ask Sage User API for account management, organization administration, billing, and platform configuration.
   version: '2.0'
   contact:
     name: Ask Sage Support
     email: support@asksage.ai
     url: https://asksage.ai
 servers:
-- url: '{baseUrl}/server'
-  description: Ask Sage Server API
+- url: '{baseUrl}/user'
+  description: Ask Sage User API
   variables:
     baseUrl:
       default: https://api.asksage.ai
@@ -90,6 +53,8 @@ paths:
       responses:
         '200':
           description: Users retrieved
+      operationId: postSuperadminGetAllUsersWithTokens
+      x-operation-id-source: derived
   /superadmin-export-users-csv:
     post:
       summary: Export all users to CSV (superadmin)
@@ -102,6 +67,8 @@ paths:
             text/csv:
               schema:
                 type: string
+      operationId: postSuperadminExportUsersCsv
+      x-operation-id-source: derived
   /superadmin-get-users:
     post:
       summary: Get users (superadmin)
@@ -122,6 +89,8 @@ paths:
       responses:
         '200':
           description: Users retrieved
+      operationId: postSuperadminGetUsers
+      x-operation-id-source: derived
   /superadmin-get-user-count:
     post:
       summary: Get total user count (superadmin)
@@ -144,6 +113,8 @@ paths:
       responses:
         '200':
           description: User count retrieved
+      operationId: postSuperadminGetUserCount
+      x-operation-id-source: derived
   /superadmin-get-stats:
     post:
       summary: Get system statistics (superadmin)
@@ -152,6 +123,8 @@ paths:
       responses:
         '200':
           description: Statistics retrieved
+      operationId: postSuperadminGetStats
+      x-operation-id-source: derived
   /superadmin-get-token-stats:
     post:
       summary: Get token usage statistics (superadmin)
@@ -160,6 +133,8 @@ paths:
       responses:
         '200':
           description: Token statistics retrieved
+      operationId: postSuperadminGetTokenStats
+      x-operation-id-source: derived
   /superadmin-get-all-logs:
     post:
       summary: Get system logs (superadmin)
@@ -179,6 +154,8 @@ paths:
       responses:
         '200':
           description: Logs retrieved
+      operationId: postSuperadminGetAllLogs
+      x-operation-id-source: derived
   /superadmin-update-user-verified:
     post:
       summary: Verify user email (superadmin)
@@ -198,6 +175,8 @@ paths:
       responses:
         '200':
           description: User verified
+      operationId: postSuperadminUpdateUserVerified
+      x-operation-id-source: derived
   /superadmin-update-user-banned:
     post:
       summary: Ban/unban user (superadmin)
@@ -222,6 +201,8 @@ paths:
       responses:
         '200':
           description: Ban status updated
+      operationId: postSuperadminUpdateUserBanned
+      x-operation-id-source: derived
   /superadmin-update-user-paid:
     post:
       summary: Update user paid status (superadmin)
@@ -251,6 +232,8 @@ paths:
       responses:
         '200':
           description: Paid status updated
+      operationId: postSuperadminUpdateUserPaid
+      x-operation-id-source: derived
   /superadmin-update-user-admin:
     post:
       summary: Grant/revoke admin privileges (superadmin)
@@ -275,6 +258,8 @@ paths:
       responses:
         '200':
           description: Admin status updated
+      operationId: postSuperadminUpdateUserAdmin
+      x-operation-id-source: derived
   /superadmin-update-user-tokens:
     post:
       summary: Update user token limit (superadmin)
@@ -296,6 +281,8 @@ paths:
       responses:
         '200':
           description: Tokens updated
+      operationId: postSuperadminUpdateUserTokens
+      x-operation-id-source: derived
   /superadmin-update-user-train-tokens:
     post:
       summary: Update user training token limit (superadmin)
@@ -317,6 +304,8 @@ paths:
       responses:
         '200':
           description: Training tokens updated
+      operationId: postSuperadminUpdateUserTrainTokens
+      x-operation-id-source: derived
   /superadmin-change-email:
     post:
       summary: Change user email (superadmin)
@@ -341,6 +330,8 @@ paths:
       responses:
         '200':
           description: Email changed
+      operationId: postSuperadminChangeEmail
+      x-operation-id-source: derived
   /superadmin-assign-payer:
     post:
       summary: Assign payer email to user (superadmin)
@@ -365,6 +356,8 @@ paths:
       responses:
         '200':
           description: Payer assigned
+      operationId: postSuperadminAssignPayer
+      x-operation-id-source: derived
   /superadmin-deassign-organization:
     post:
       summary: Remove user from organization (superadmin)
@@ -385,6 +378,8 @@ paths:
       responses:
         '200':
           description: Organization removed
+      operationId: postSuperadminDeassignOrganization
+      x-operation-id-source: derived
   /superadmin-cuimfa:
     post:
       summary: Enable/disable CUI MFA authorization (superadmin)
@@ -411,6 +406,8 @@ paths:
       responses:
         '200':
           description: CUI MFA status updated
+      operationId: postSuperadminCuimfa
+      x-operation-id-source: derived
   /superadmin-delete-last-chatsession:
     post:
       summary: Delete user's last chat session (superadmin)
@@ -431,6 +428,8 @@ paths:
       responses:
         '200':
           description: Chat session deleted
+      operationId: postSuperadminDeleteLastChatsession
+      x-operation-id-source: derived
   /superadmin-reset-mfa:
     post:
       summary: Reset user MFA (superadmin)
@@ -451,6 +450,8 @@ paths:
       responses:
         '200':
           description: MFA reset
+      operationId: postSuperadminResetMfa
+      x-operation-id-source: derived
   /superadmin-reset-cac:
     post:
       summary: Reset user CAC (superadmin)
@@ -471,6 +472,8 @@ paths:
       responses:
         '200':
           description: CAC reset
+      operationId: postSuperadminResetCac
+      x-operation-id-source: derived
   /superadmin-reset-pw:
     post:
       summary: Reset user password (superadmin)
@@ -502,6 +505,8 @@ paths:
                     type: string
                   status:
                     type: integer
+      operationId: postSuperadminResetPw
+      x-operation-id-source: derived
   /superadmin-assign-dataset:
     post:
       summary: Assign dataset to user (superadmin)
@@ -525,6 +530,8 @@ paths:
       responses:
         '200':
           description: Dataset assigned
+      operationId: postSuperadminAssignDataset
+      x-operation-id-source: derived
   /superadmin-deassign-dataset:
     post:
       summary: Remove dataset from user (superadmin)
@@ -548,6 +555,8 @@ paths:
       responses:
         '200':
           description: Dataset removed
+      operationId: postSuperadminDeassignDataset
+      x-operation-id-source: derived
   /superadmin-get-dataset:
     post:
       summary: Get user datasets (superadmin)
@@ -568,6 +577,8 @@ paths:
       responses:
         '200':
           description: Datasets retrieved
+      operationId: postSuperadminGetDataset
+      x-operation-id-source: derived
   /superadmin-delete-all-dataset:
     post:
       summary: Delete dataset from all users (superadmin)
@@ -587,6 +598,8 @@ paths:
       responses:
         '200':
           description: Dataset deleted
+      operationId: postSuperadminDeleteAllDataset
+      x-operation-id-source: derived
   /superadmin-assign-persona:
     post:
       summary: Assign persona to user (superadmin)
@@ -610,6 +623,8 @@ paths:
       responses:
         '200':
           description: Persona assigned
+      operationId: postSuperadminAssignPersona
+      x-operation-id-source: derived
   /superadmin-assign-plugin:
     post:
       summary: Assign plugin to user (superadmin)
@@ -634,6 +649,8 @@ paths:
       responses:
         '200':
           description: Plugin assigned
+      operationId: postSuperadminAssignPlugin
+      x-operation-id-source: derived
   /superadmin-get-user-api-keys:
     post:
       summary: Get user API keys (superadmin)
@@ -654,6 +671,8 @@ paths:
       responses:
         '200':
           description: API keys retrieved
+      operationId: postSuperadminGetUserApiKeys
+      x-operation-id-source: derived
   /superadmin-user-api-key:
     post:
       summary: Create API key for user (superadmin)
@@ -677,6 +696,8 @@ paths:
       responses:
         '200':
           description: API key created
+      operationId: postSuperadminUserApiKey
+      x-operation-id-source: derived
   /superadmin-get-all-organizations:
     post:
       summary: Get all organizations (superadmin)
@@ -685,6 +706,8 @@ paths:
       responses:
         '200':
           description: Organizations retrieved
+      operationId: postSuperadminGetAllOrganizations
+      x-operation-id-source: derived
   /superadmin-add-organization:
     post:
       summary: Add new organization (superadmin)
@@ -726,6 +749,8 @@ paths:
       responses:
         '200':
           description: Organization added
+      operationId: postSuperadminAddOrganization
+      x-operation-id-source: derived
   /superadmin-update-organization/{organization_id}:
     put:
       summary: Update organization (superadmin)
@@ -746,6 +771,8 @@ paths:
       responses:
         '200':
           description: Organization updated
+      operationId: putSuperadminUpdateOrganizationByOrganizationId
+      x-operation-id-source: derived
   /superadmin-get-organization/{organization_id}:
     get:
       summary: Get organization details (superadmin)
@@ -760,6 +787,8 @@ paths:
       responses:
         '200':
           description: Organization retrieved
+      operationId: getSuperadminGetOrganizationByOrganizationId
+      x-operation-id-source: derived
   /superadmin-assign-users-to-organization:
     post:
       summary: Assign users to organization (superadmin)
@@ -785,6 +814,8 @@ paths:
       responses:
         '200':
           description: Users assigned
+      operationId: postSuperadminAssignUsersToOrganization
+      x-operation-id-source: derived
   /superadmin-add-organization-purchase:
     post:
       summary: Add organization purchase (superadmin)
@@ -824,6 +855,8 @@ paths:
       responses:
         '200':
           description: Purchase added
+      operationId: postSuperadminAddOrganizationPurchase
+      x-operation-id-source: derived
   /superadmin-update-organization-purchase/{purchase_id}:
     put:
       summary: Update organization purchase (superadmin)
@@ -844,6 +877,8 @@ paths:
       responses:
         '200':
           description: Purchase updated
+      operationId: putSuperadminUpdateOrganizationPurchaseByPurchaseId
+      x-operation-id-source: derived
   /superadmin-get-organization-purchases/{organization_id}:
     post:
       summary: Get organization purchases (superadmin)
@@ -858,6 +893,8 @@ paths:
       responses:
         '200':
           description: Purchases retrieved
+      operationId: postSuperadminGetOrganizationPurchasesByOrganizationId
+      x-operation-id-source: derived
   /superadmin-update-sales:
     post:
       summary: Import sales data from Excel (superadmin)
@@ -879,6 +916,8 @@ paths:
       responses:
         '200':
           description: Sales data imported
+      operationId: postSuperadminUpdateSales
+      x-operation-id-source: derived
   /superadmin-export-weekly-reports:
     post:
       summary: Export weekly organization report (superadmin)
@@ -900,6 +939,8 @@ paths:
             text/csv:
               schema:
                 type: string
+      operationId: postSuperadminExportWeeklyReports
+      x-operation-id-source: derived
   /superadmin-export-weekly-model-usage-csv:
     post:
       summary: Export model usage report (superadmin)
@@ -921,6 +962,8 @@ paths:
             text/csv:
               schema:
                 type: string
+      operationId: postSuperadminExportWeeklyModelUsageCsv
+      x-operation-id-source: derived
   /superadmin-allocation-policy-get:
     post:
       summary: Get allocation policy (superadmin)
@@ -937,6 +980,8 @@ paths:
       responses:
         '200':
           description: Policy retrieved
+      operationId: postSuperadminAllocationPolicyGet
+      x-operation-id-source: derived
   /superadmin-allocation-policy-update:
     post:
       summary: Update allocation policy (superadmin)
@@ -962,6 +1007,8 @@ paths:
       responses:
         '200':
           description: Policy updated
+      operationId: postSuperadminAllocationPolicyUpdate
+      x-operation-id-source: derived
   /superadmin-token-distribution-preview:
     post:
       summary: Preview token distribution (superadmin)
@@ -981,6 +1028,8 @@ paths:
       responses:
         '200':
           description: Distribution preview
+      operationId: postSuperadminTokenDistributionPreview
+      x-operation-id-source: derived
   /superadmin-token-distribution-execute:
     post:
       summary: Execute token distribution (superadmin)
@@ -1000,6 +1049,8 @@ paths:
       responses:
         '200':
           description: Distribution executed
+      operationId: postSuperadminTokenDistributionExecute
+      x-operation-id-source: derived
   /superadmin-allocation-dashboard:
     post:
       summary: Get allocation dashboard (superadmin)
@@ -1019,6 +1070,8 @@ paths:
       responses:
         '200':
           description: Dashboard data retrieved
+      operationId: postSuperadminAllocationDashboard
+      x-operation-id-source: derived
   /superadmin-get-all-datasets:
     post:
       summary: Get all datasets (superadmin)
@@ -1050,6 +1103,8 @@ paths:
       responses:
         '200':
           description: Datasets retrieved
+      operationId: postSuperadminGetAllDatasets
+      x-operation-id-source: derived
   /superadmin-get-dataset-files:
     post:
       summary: Get dataset files (superadmin)
@@ -1073,6 +1128,8 @@ paths:
       responses:
         '200':
           description: Dataset files retrieved
+      operationId: postSuperadminGetDatasetFiles
+      x-operation-id-source: derived
   /superadmin-get-dataset-statistics:
     post:
       summary: Get dataset statistics (superadmin)
@@ -1081,6 +1138,8 @@ paths:
       responses:
         '200':
           description: Dataset statistics retrieved
+      operationId: postSuperadminGetDatasetStatistics
+      x-operation-id-source: derived
   /superadmin-get-dataset-details:
     post:
       summary: Get dataset details (superadmin)
@@ -1100,6 +1159,8 @@ paths:
       responses:
         '200':
           description: Dataset details retrieved
+      operationId: postSuperadminGetDatasetDetails
+      x-operation-id-source: derived
   /superadmin-export-datasets-csv:
     post:
       summary: Export datasets to CSV (superadmin)
@@ -1112,6 +1173,8 @@ paths:
             text/csv:
               schema:
                 type: string
+      operationId: postSuperadminExportDatasetsCsv
+      x-operation-id-source: derived
   /superadmin-get-analytics-data:
     post:
       summary: Get analytics data (superadmin)
@@ -1134,6 +1197,8 @@ paths:
       responses:
         '200':
           description: Analytics data retrieved
+      operationId: postSuperadminGetAnalyticsData
+      x-operation-id-source: derived
   /superadmin-export-label-usage-csv:
     post:
       summary: Export label usage to CSV (superadmin)
@@ -1146,6 +1211,8 @@ paths:
             text/csv:
               schema:
                 type: string
+      operationId: postSuperadminExportLabelUsageCsv
+      x-operation-id-source: derived
   /superadmin-get-token-requests:
     post:
       summary: Get token requests (superadmin)
@@ -1168,6 +1235,8 @@ paths:
       responses:
         '200':
           description: Token requests retrieved
+      operationId: postSuperadminGetTokenRequests
+      x-operation-id-source: derived
   /superadmin-review-token-request:
     post:
       summary: Review token request (superadmin)
@@ -1197,6 +1266,8 @@ paths:
       responses:
         '200':
           description: Token request reviewed
+      operationId: postSuperadminReviewTokenRequest
+      x-operation-id-source: derived
   /superadmin-total-purchased-tokens-organization:
     post:
       summary: Get total purchased tokens for organization (superadmin)
@@ -1216,6 +1287,8 @@ paths:
       responses:
         '200':
           description: Token information retrieved
+      operationId: postSuperadminTotalPurchasedTokensOrganization
+      x-operation-id-source: derived
   /superadmin-used-tokens-for-organization:
     post:
       summary: Get used tokens for organization (superadmin)
@@ -1235,6 +1308,8 @@ paths:
       responses:
         '200':
           description: Used tokens retrieved
+      operationId: postSuperadminUsedTokensForOrganization
+      x-operation-id-source: derived
 components:
   schemas:
     Organization:
@@ -1292,4 +1367,4 @@ components:
       type: apiKey
       in: header
       name: x-access-tokens
-      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.
+      description: JWT authentication token. Obtain a token by calling `/get-token-with-api-key` with your email and 64-character API key. Some admin and superadmin endpoints also require an email address in the request body to identify the target user.

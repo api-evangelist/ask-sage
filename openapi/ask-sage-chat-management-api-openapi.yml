@@ -1,52 +1,15 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin Chat Management API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage User Chat Management API
+  description: Ask Sage User API for account management, organization administration, billing, and platform configuration.
   version: '2.0'
   contact:
     name: Ask Sage Support
     email: support@asksage.ai
     url: https://asksage.ai
 servers:
-- url: '{baseUrl}/server'
-  description: Ask Sage Server API
+- url: '{baseUrl}/user'
+  description: Ask Sage User API
   variables:
     baseUrl:
       default: https://api.asksage.ai
@@ -73,6 +36,8 @@ paths:
                   response:
                     type: string
                     description: JSON string containing chats and buttons arrays
+      operationId: postGetChats
+      x-operation-id-source: derived
   /get-chat-session:
     post:
       summary: Get specific chat session
@@ -93,6 +58,8 @@ paths:
       responses:
         '200':
           description: Chat session retrieved
+      operationId: postGetChatSession
+      x-operation-id-source: derived
   /delete-chat-session:
     post:
       summary: Delete chat session
@@ -113,6 +80,8 @@ paths:
       responses:
         '200':
           description: Chat session deleted
+      operationId: postDeleteChatSession
+      x-operation-id-source: derived
   /append-chat:
     post:
       summary: Append chat message
@@ -136,6 +105,8 @@ paths:
       responses:
         '200':
           description: Chat appended
+      operationId: postAppendChat
+      x-operation-id-source: derived
   /copy-chat:
     post:
       summary: Copy chat session to another user
@@ -162,6 +133,8 @@ paths:
       responses:
         '200':
           description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 ''Chats copied'' on success; 400 for missing chat_id/email, invalid chat_id UUID, an invalid/non-existent recipient email, a recipient outside the caller''s domain/organization, or a source session not owned by the caller. The HTTP status code is not used to signal errors.'
+      operationId: postCopyChat
+      x-operation-id-source: derived
   /create-chat-session:
     post:
       summary: Create new chat session
@@ -170,6 +143,8 @@ paths:
       responses:
         '200':
           description: Chat session created
+      operationId: postCreateChatSession
+      x-operation-id-source: derived
   /update-chat-session-title:
     post:
       summary: Update chat session title
@@ -195,6 +170,8 @@ paths:
       responses:
         '200':
           description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 with ''Title updated'' on success; 400 ''Missing data'' if session_id or new_title is missing; 404 ''Session not found'' if the session does not exist. The HTTP status code is not used to signal errors.'
+      operationId: postUpdateChatSessionTitle
+      x-operation-id-source: derived
   /update-chat-session-json:
     post:
       summary: Update chat session JSON data
@@ -238,10 +215,12 @@ paths:
       responses:
         '200':
           description: 'Always HTTP 200. The JSON body carries the outcome in a ''status'' field: 200 with ''Chat content updated'' on success; 400 ''Invalid input'' if session_id is missing or json_data is not an array; 400 ''Invalid session_id'' if the UUID is malformed. The HTTP status code is not used to signal errors. NOTE: this is an upsert, not a strict update - if session_id is a valid UUID with no existing session, the server CREATES a new session (using ''title'', defaulting to ''New Chat'') and returns status 200. A typo or stale session_id will therefore silently create a session rather than error.'
+      operationId: postUpdateChatSessionJson
+      x-operation-id-source: derived
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: x-access-tokens
-      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.
+      description: JWT authentication token. Obtain a token by calling `/get-token-with-api-key` with your email and 64-character API key. Some admin and superadmin endpoints also require an email address in the request body to identify the target user.

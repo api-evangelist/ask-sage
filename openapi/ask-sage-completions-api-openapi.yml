@@ -1,44 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin Completions API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage Server Completions API
+  description: Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
   version: '2.0'
   contact:
     name: Ask Sage Support
@@ -60,7 +23,9 @@ paths:
   /query:
     post:
       summary: Generate completion
-      description: "Main endpoint for generating AI completions. \nThe message field can be either a string or an array of conversation messages.\n"
+      description: 'Main endpoint for generating AI completions.
+
+        The message field can be either a string or an array of conversation messages.'
       tags:
       - Completions
       requestBody:
@@ -226,14 +191,14 @@ paths:
               schema:
                 type: string
                 description: Streaming response with delimiter-separated JSON chunks
+      operationId: postQuery
+      x-operation-id-source: derived
   /query_with_file:
     post:
       summary: Generate completion with file attachments
       description: 'Generate AI completion with one or more file attachments. Supports multiple files.
 
-        Maximum file size: 500MB per file. Maximum number of files determined by server configuration.
-
-        '
+        Maximum file size: 500MB per file. Maximum number of files determined by server configuration.'
       tags:
       - Completions
       requestBody:
@@ -305,6 +270,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompletionResponse'
+      operationId: postQueryWithFile
+      x-operation-id-source: derived
   /follow-up-questions:
     post:
       summary: Generate follow-up questions
@@ -335,6 +302,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompletionResponse'
+      operationId: postFollowUpQuestions
+      x-operation-id-source: derived
     get:
       summary: Generate follow-up questions (GET)
       description: Generate relevant follow-up questions based on the conversation
@@ -347,8 +316,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompletionResponse'
+      operationId: getFollowUpQuestions
+      x-operation-id-source: derived
 components:
   schemas:
+    ToolChoice:
+      oneOf:
+      - type: string
+        enum:
+        - auto
+        - none
+        - required
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - function
+          function:
+            type: object
+            properties:
+              name:
+                type: string
+    CompletionResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: Status message or error description
+        message:
+          type: string
+          description: Generated completion text
+        embedding_down:
+          type: boolean
+          description: Whether embedding service is down
+        vectors_down:
+          type: boolean
+          description: Whether vector database is down
+        uuid:
+          type: string
+          description: Unique identifier for this completion
+        references:
+          type: string
+          description: References used for the completion
+        type:
+          type: string
+          description: Type of response
+        added_obj:
+          type:
+          - object
+          - 'null'
+          description: Additional object data for chained operations
+        tool_calls:
+          type:
+          - array
+          - 'null'
+          description: Tool/function calls made during completion
+        usage:
+          type:
+          - object
+          - 'null'
+          description: Token usage statistics
+        tool_responses:
+          type:
+          - array
+          - 'null'
+          description: Responses from tool executions
+        tool_calls_unified:
+          type:
+          - array
+          - 'null'
+          description: Unified tool calls format
+        status:
+          type: integer
+          description: HTTP status code
     Message:
       oneOf:
       - type: string
@@ -376,24 +417,6 @@ components:
           message: What is Ask Sage?
         - user: gpt
           message: Ask Sage is an...
-    ToolChoice:
-      oneOf:
-      - type: string
-        enum:
-        - auto
-        - none
-        - required
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - function
-          function:
-            type: object
-            properties:
-              name:
-                type: string
     Tool:
       type: object
       properties:
@@ -406,53 +429,6 @@ components:
         parameters:
           type: object
           description: Parameters schema for the tool
-    CompletionResponse:
-      type: object
-      properties:
-        response:
-          type: string
-          description: Status message or error description
-        message:
-          type: string
-          description: Generated completion text
-        embedding_down:
-          type: boolean
-          description: Whether embedding service is down
-        vectors_down:
-          type: boolean
-          description: Whether vector database is down
-        uuid:
-          type: string
-          description: Unique identifier for this completion
-        references:
-          type: string
-          description: References used for the completion
-        type:
-          type: string
-          description: Type of response
-        added_obj:
-          type: object
-          nullable: true
-          description: Additional object data for chained operations
-        tool_calls:
-          type: array
-          nullable: true
-          description: Tool/function calls made during completion
-        usage:
-          type: object
-          nullable: true
-          description: Token usage statistics
-        tool_responses:
-          type: array
-          nullable: true
-          description: Responses from tool executions
-        tool_calls_unified:
-          type: array
-          nullable: true
-          description: Unified tool calls format
-        status:
-          type: integer
-          description: HTTP status code
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

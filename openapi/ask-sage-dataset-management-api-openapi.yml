@@ -1,52 +1,15 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ask Sage Server Admin Dataset Management API
-  description: 'Ask Sage is an AI-powered platform providing intelligent completions, knowledge management, and workflow automation.
-
-
-    ## Base URL
-
-    `https://api.asksage.ai`
-
-
-    ## Authentication
-
-    All endpoints require a valid JWT token passed via the `x-access-tokens` header, unless otherwise noted.
-
-
-    Obtain a token by authenticating through the User API (`/user/get-token-with-api-key`).
-
-
-    ## Message Format
-
-    The `message` field in API requests can be either:
-
-    - A single string prompt: `"What is Ask Sage?"`
-
-    - An array of conversation messages: `[{"user": "me", "message": "what is Ask Sage?"}, {"user": "gpt", "message": "Ask Sage is an..."}]`
-
-
-    ## Key Features
-
-    - **AI Completions** — Query multiple LLM providers with a unified interface
-
-    - **Knowledge Training** — Upload documents, files, and data to build custom datasets
-
-    - **Tabular Data** — Ingest and query structured data (CSV, XLSX) with natural language
-
-    - **Agent Builder** — Create, configure, and execute multi-step AI workflows
-
-    - **Plugins** — Extend capabilities with built-in and custom plugins
-
-    - **MCP Servers** — Connect to Model Context Protocol servers for tool integration'
+  title: Ask Sage User Dataset Management API
+  description: Ask Sage User API for account management, organization administration, billing, and platform configuration.
   version: '2.0'
   contact:
     name: Ask Sage Support
     email: support@asksage.ai
     url: https://asksage.ai
 servers:
-- url: '{baseUrl}/server'
-  description: Ask Sage Server API
+- url: '{baseUrl}/user'
+  description: Ask Sage User API
   variables:
     baseUrl:
       default: https://api.asksage.ai
@@ -87,6 +50,8 @@ paths:
       responses:
         '200':
           description: Dataset added
+      operationId: postAddDataset
+      x-operation-id-source: derived
   /assign-dataset:
     post:
       summary: Assign dataset to user
@@ -110,6 +75,8 @@ paths:
       responses:
         '200':
           description: Dataset assigned
+      operationId: postAssignDataset
+      x-operation-id-source: derived
   /deassign-dataset:
     post:
       summary: Remove dataset from user
@@ -133,6 +100,8 @@ paths:
       responses:
         '200':
           description: Dataset deassigned
+      operationId: postDeassignDataset
+      x-operation-id-source: derived
   /update-permission-dataset:
     post:
       summary: Update dataset permissions
@@ -163,6 +132,8 @@ paths:
       responses:
         '200':
           description: Permissions updated
+      operationId: postUpdatePermissionDataset
+      x-operation-id-source: derived
   /get-datasets-with-permissions:
     post:
       summary: Get user datasets with permissions
@@ -189,6 +160,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Dataset'
+      operationId: postGetDatasetsWithPermissions
+      x-operation-id-source: derived
     get:
       summary: Get user datasets with permissions (GET)
       tags:
@@ -205,6 +178,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Dataset'
+      operationId: getGetDatasetsWithPermissions
+      x-operation-id-source: derived
   /delete-dataset:
     post:
       summary: Delete dataset
@@ -224,6 +199,8 @@ paths:
       responses:
         '200':
           description: Dataset deleted
+      operationId: postDeleteDataset
+      x-operation-id-source: derived
   /get-dataset-permissions:
     post:
       summary: Check dataset permissions
@@ -259,6 +236,8 @@ paths:
                     type: boolean
                   status:
                     type: integer
+      operationId: postGetDatasetPermissions
+      x-operation-id-source: derived
   /get-dataset-assignments:
     post:
       summary: Get dataset assignments
@@ -278,6 +257,8 @@ paths:
       responses:
         '200':
           description: Assignments retrieved
+      operationId: postGetDatasetAssignments
+      x-operation-id-source: derived
   /update-dataset-organization:
     post:
       summary: Update dataset organization sharing
@@ -300,6 +281,8 @@ paths:
       responses:
         '200':
           description: Organization sharing updated
+      operationId: postUpdateDatasetOrganization
+      x-operation-id-source: derived
   /get-dataset-organization:
     post:
       summary: Get dataset organization status
@@ -331,6 +314,8 @@ paths:
                     - 1
                   status:
                     type: integer
+      operationId: postGetDatasetOrganization
+      x-operation-id-source: derived
 components:
   schemas:
     Dataset:
@@ -355,4 +340,4 @@ components:
       type: apiKey
       in: header
       name: x-access-tokens
-      description: JWT authentication token. Obtain a token by calling the User API endpoint `/user/get-token-with-api-key` with your email and API key.
+      description: JWT authentication token. Obtain a token by calling `/get-token-with-api-key` with your email and 64-character API key. Some admin and superadmin endpoints also require an email address in the request body to identify the target user.

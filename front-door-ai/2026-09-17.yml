@@ -1,0 +1,33 @@
+# Front Door AI Index — ask-sage — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: ask-sage
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.asksage.ai
+  final_host: www.asksage.ai
+  ownership: own
+  owner: ask-sage
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 21
+  host_score: 21
+  density: 25.36
+  words: 828
+  tiers:
+    agentic: 0
+    core: 18
+    model: 3
+  ambiguous: 4
+  top_terms:
+    AI: 10
+    generative ai: 6
+    automation: 3
+    Anthropic: 1
+    Azure OpenAI: 1
+    LLMs: 1
+    OpenAI: 1
+    agent: 1
+    large language model: 1
