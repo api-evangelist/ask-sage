@@ -1312,6 +1312,29 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    OrganizationPurchase:
+      type: object
+      properties:
+        id:
+          type: integer
+        organization_id:
+          type: integer
+        date_purchase:
+          type: string
+          format: date-time
+        email_payer:
+          type: string
+        payer_comment:
+          type: string
+        total_tokens:
+          type: integer
+          format: int64
+        total_training_tokens:
+          type: integer
+          format: int64
+        expiration:
+          type: string
+          format: date-time
     Organization:
       type: object
       properties:
@@ -1339,29 +1362,6 @@ components:
           type: string
         settings:
           type: string
-    OrganizationPurchase:
-      type: object
-      properties:
-        id:
-          type: integer
-        organization_id:
-          type: integer
-        date_purchase:
-          type: string
-          format: date-time
-        email_payer:
-          type: string
-        payer_comment:
-          type: string
-        total_tokens:
-          type: integer
-          format: int64
-        total_training_tokens:
-          type: integer
-          format: int64
-        expiration:
-          type: string
-          format: date-time
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
