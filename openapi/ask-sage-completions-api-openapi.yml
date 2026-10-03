@@ -320,33 +320,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Message:
-      oneOf:
-      - type: string
-        description: Single message prompt
-        example: What is Ask Sage?
-      - type: array
-        description: Array of conversation messages
-        items:
-          type: object
-          required:
-          - user
-          - message
-          properties:
-            user:
-              type: string
-              enum:
-              - me
-              - gpt
-              description: Identifies the sender of the message
-            message:
-              type: string
-              description: The content of the message
-        example:
-        - user: me
-          message: What is Ask Sage?
-        - user: gpt
-          message: Ask Sage is an...
     CompletionResponse:
       type: object
       properties:
@@ -399,18 +372,33 @@ components:
         status:
           type: integer
           description: HTTP status code
-    Tool:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the tool/function
-        description:
-          type: string
-          description: Description of what the tool does
-        parameters:
+    Message:
+      oneOf:
+      - type: string
+        description: Single message prompt
+        example: What is Ask Sage?
+      - type: array
+        description: Array of conversation messages
+        items:
           type: object
-          description: Parameters schema for the tool
+          required:
+          - user
+          - message
+          properties:
+            user:
+              type: string
+              enum:
+              - me
+              - gpt
+              description: Identifies the sender of the message
+            message:
+              type: string
+              description: The content of the message
+        example:
+        - user: me
+          message: What is Ask Sage?
+        - user: gpt
+          message: Ask Sage is an...
     ToolChoice:
       oneOf:
       - type: string
@@ -429,6 +417,18 @@ components:
             properties:
               name:
                 type: string
+    Tool:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the tool/function
+        description:
+          type: string
+          description: Description of what the tool does
+        parameters:
+          type: object
+          description: Parameters schema for the tool
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -150,6 +150,20 @@ paths:
       - Execute Agent
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        status:
+          type: integer
+          description: HTTP status code
+        details:
+          type: string
+          description: Additional error details
+      required:
+      - error
     ExecutionError:
       type: object
       properties:
@@ -246,20 +260,6 @@ components:
           - string
           - 'null'
           description: Error message if execution failed
-    ApiError:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        status:
-          type: integer
-          description: HTTP status code
-        details:
-          type: string
-          description: Additional error details
-      required:
-      - error
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
