@@ -164,15 +164,6 @@ components:
           description: Additional error details
       required:
       - error
-    ExecutionError:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-        details:
-          type: string
     AgentExecutionResponse:
       type: object
       properties:
@@ -260,6 +251,15 @@ components:
           - string
           - 'null'
           description: Error message if execution failed
+    ExecutionError:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
