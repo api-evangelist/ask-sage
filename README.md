@@ -64,6 +64,183 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Ask Sage is a company surfaced as a portfolio company of sapphire-ventures and added to the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment pipeline.
+Ask Sage is a secure, government- and defense-grade generative AI platform that gives regulated organizations access to a broad catalog of commercial and open large language models behind a strict compliance boundary (FedRAMP High, DoD Impact Level 5/6, CMMC, NIST 800-53, GDPR). Beyond chat, it offers retrieval over private datasets, agents and an Agent Builder, plugins, a Deep Agent, and Model Context Protocol (MCP) integrations for Microsoft 365, GitHub, and Box. The platform is exposed through two REST APIs — a Server API for core AI operations (models, completions, agents, datasets, training) and a User API for authentication, API keys, and dataset management — plus OpenAI-, Anthropic-, and Gemini-style compatibility endpoints and an official Python client.
 
-Backed by: sapphire-ventures — https://www.asksage.ai/
+**Areas:** Company · Artificial Intelligence · Generative AI · LLM · Government · Defense · Compliance · FedRAMP
+
+## Ask Sage on APIs.io
+
+Everything profiled for Ask Sage is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ask-sage/](https://apis.io/providers/ask-sage/)** — or go straight to one of the APIs or properties below.
+
+### APIs (32)
+
+- [Ask Sage Admin API](https://apis.io/apis/ask-sage/ask-sage-admin-api/) — Admin operations for organization management
+- [Ask Sage Agent Builder API](https://apis.io/apis/ask-sage/ask-sage-agent-builder-api/) — Agent builder workflow and agent management
+- [Ask Sage Allocation API](https://apis.io/apis/ask-sage/ask-sage-allocation-api/) — Token allocation and distribution policies
+- [Ask Sage API Key Management API](https://apis.io/apis/ask-sage/ask-sage-api-key-management-api/) — API key operations
+- [Ask Sage Audio API](https://apis.io/apis/ask-sage/ask-sage-audio-api/) — Audio processing (TTS/STT)
+- [Ask Sage Authentication API](https://apis.io/apis/ask-sage/ask-sage-authentication-api/) — User authentication and authorization
+- [Ask Sage Chat Management API](https://apis.io/apis/ask-sage/ask-sage-chat-management-api/) — Chat session operations
+- [Ask Sage Completions API](https://apis.io/apis/ask-sage/ask-sage-completions-api/) — Text generation and completions
+- [Ask Sage Configuration API](https://apis.io/apis/ask-sage/ask-sage-configuration-api/) — System configuration endpoints
+- [Ask Sage Dataset Management API](https://apis.io/apis/ask-sage/ask-sage-dataset-management-api/) — Dataset operations and permissions
+- [Ask Sage Datasets API](https://apis.io/apis/ask-sage/ask-sage-datasets-api/) — Knowledge dataset management
+- [Ask Sage Deep Agent API](https://apis.io/apis/ask-sage/ask-sage-deep-agent-api/) — Deep agent operations
+- [Ask Sage Execute Agent API](https://apis.io/apis/ask-sage/ask-sage-execute-agent-api/) — The Execute Agent API from Ask Sage — 1 operation(s) for execute agent.
+- [Ask Sage Feedback API](https://apis.io/apis/ask-sage/ask-sage-feedback-api/) — User feedback operations
+- [Ask Sage Files API](https://apis.io/apis/ask-sage/ask-sage-files-api/) — File processing and analysis
+- [Ask Sage List Agents API](https://apis.io/apis/ask-sage/ask-sage-list-agents-api/) — The List Agents API from Ask Sage — 1 operation(s) for list agents.
+- [Ask Sage MCP Servers API](https://apis.io/apis/ask-sage/ask-sage-mcp-servers-api/) — Model Context Protocol server management
+- [Ask Sage Memos API](https://apis.io/apis/ask-sage/ask-sage-memos-api/) — Memo management within workbooks
+- [Ask Sage Models API](https://apis.io/apis/ask-sage/ask-sage-models-api/) — AI model management
+- [Ask Sage Plugins API](https://apis.io/apis/ask-sage/ask-sage-plugins-api/) — Plugin execution and management
+- [Ask Sage Sources API](https://apis.io/apis/ask-sage/ask-sage-sources-api/) — Source management within workbooks
+- [Ask Sage Superadmin API](https://apis.io/apis/ask-sage/ask-sage-superadmin-api/) — Superadmin system operations
+- [Ask Sage System API](https://apis.io/apis/ask-sage/ask-sage-system-api/) — System utilities and health checks
+- [Ask Sage Tabular Data API](https://apis.io/apis/ask-sage/ask-sage-tabular-data-api/) — Tabular data ingestion and querying
+- [Ask Sage Token Requests API](https://apis.io/apis/ask-sage/ask-sage-token-requests-api/) — Token request and approval workflow
+- [Ask Sage Training API](https://apis.io/apis/ask-sage/ask-sage-training-api/) — Model training and content ingestion
+- [Ask Sage Usage API](https://apis.io/apis/ask-sage/ask-sage-usage-api/) — Token usage tracking
+- [Ask Sage User Information API](https://apis.io/apis/ask-sage/ask-sage-user-information-api/) — User data and logs
+- [Ask Sage User Management API](https://apis.io/apis/ask-sage/ask-sage-user-management-api/) — User profile and settings management
+- [Ask Sage Utilities API](https://apis.io/apis/ask-sage/ask-sage-utilities-api/) — Utility endpoints
+- [Ask Sage Widgets API](https://apis.io/apis/ask-sage/ask-sage-widgets-api/) — Widget/bot management
+- [Ask Sage Workbooks API](https://apis.io/apis/ask-sage/ask-sage-workbooks-api/) — Workbook management
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [ask-sage](https://apis.io/servers/ask-sage/ask-sage/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Ask Sage Agentic Access](https://apis.io/agentic-access/ask-sage/ask-sage-agentic-access/)
+
+#### Collections (32)
+
+Postman and Open Collection request collections.
+
+- [Ask Sage Server Admin API](https://apis.io/collections/ask-sage/open-ask-sage-admin-api/)
+- [Ask Sage Server Admin Agent Builder API](https://apis.io/collections/ask-sage/open-ask-sage-agent-builder-api/)
+- [Ask Sage Server Admin Allocation API](https://apis.io/collections/ask-sage/open-ask-sage-allocation-api/)
+- [Ask Sage Server Admin API Key Management API](https://apis.io/collections/ask-sage/open-ask-sage-api-key-management-api/)
+- [Ask Sage Server Admin Audio API](https://apis.io/collections/ask-sage/open-ask-sage-audio-api/)
+- [Ask Sage Server Admin Authentication API](https://apis.io/collections/ask-sage/open-ask-sage-authentication-api/)
+- [Ask Sage Server Admin Chat Management API](https://apis.io/collections/ask-sage/open-ask-sage-chat-management-api/)
+- [Ask Sage Server Admin Completions API](https://apis.io/collections/ask-sage/open-ask-sage-completions-api/)
+- [Ask Sage Server Admin Configuration API](https://apis.io/collections/ask-sage/open-ask-sage-configuration-api/)
+- [Ask Sage Server Admin Dataset Management API](https://apis.io/collections/ask-sage/open-ask-sage-dataset-management-api/)
+- [Ask Sage Server Admin Datasets API](https://apis.io/collections/ask-sage/open-ask-sage-datasets-api/)
+- [Ask Sage Server Admin Deep Agent API](https://apis.io/collections/ask-sage/open-ask-sage-deep-agent-api/)
+- [Ask Sage Server Admin Execute Agent API](https://apis.io/collections/ask-sage/open-ask-sage-execute-agent-api/)
+- [Ask Sage Server Admin Feedback API](https://apis.io/collections/ask-sage/open-ask-sage-feedback-api/)
+- [Ask Sage Server Admin Files API](https://apis.io/collections/ask-sage/open-ask-sage-files-api/)
+- [Ask Sage Server Admin List Agents API](https://apis.io/collections/ask-sage/open-ask-sage-list-agents-api/)
+- [Ask Sage Server Admin MCP Servers API](https://apis.io/collections/ask-sage/open-ask-sage-mcp-servers-api/)
+- [Ask Sage Server Admin Memos API](https://apis.io/collections/ask-sage/open-ask-sage-memos-api/)
+- [Ask Sage Server Admin Models API](https://apis.io/collections/ask-sage/open-ask-sage-models-api/)
+- [Ask Sage Server Admin Plugins API](https://apis.io/collections/ask-sage/open-ask-sage-plugins-api/)
+- [Ask Sage Server Admin Sources API](https://apis.io/collections/ask-sage/open-ask-sage-sources-api/)
+- [Ask Sage Server Admin Superadmin API](https://apis.io/collections/ask-sage/open-ask-sage-superadmin-api/)
+- [Ask Sage Server Admin System API](https://apis.io/collections/ask-sage/open-ask-sage-system-api/)
+- [Ask Sage Server Admin Tabular Data API](https://apis.io/collections/ask-sage/open-ask-sage-tabular-data-api/)
+- [Ask Sage Server Admin Token Requests API](https://apis.io/collections/ask-sage/open-ask-sage-token-requests-api/)
+- …and 7 more published on APIs.io
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Ask Sage Server Overlay](https://apis.io/overlays/ask-sage/ask-sage-server-overlay/)
+- [Ask Sage User Overlay](https://apis.io/overlays/ask-sage/ask-sage-user-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ask Sage Authentication](https://apis.io/security/ask-sage/ask-sage-authentication/)
+- [Ask Sage Domain Security](https://apis.io/security/ask-sage/ask-sage-domain-security/)
+- [Ask Sage Trust Center](https://apis.io/security/ask-sage/ask-sage-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Ask Sage Plans Pricing](https://apis.io/plans/ask-sage/ask-sage-plans-pricing/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.asksage.ai/)
+- [Documentation](https://docs.asksage.ai/docs/v1/api-documentation/api-documentation.html)
+- [Getting started](https://docs.asksage.ai/docs/v1/asksage-platform/getting-started/getting-started.html)
+- [API reference](https://docs.asksage.ai/docs/v1/api-documentation/api-endpoints.html)
+- [Pricing](https://www.asksage.ai/how-to-buy/)
+- [Sign up](https://chat.asksage.ai/)
+- [Support](https://docs.asksage.ai/docs/v1/support.html)
+- [Blog](https://www.asksage.ai/company/newsroom/)
+- [Compliance](https://www.asksage.ai/use-cases/compliance/)
+- [Terms of service](https://www.asksage.ai/terms-of-use/)
+- [Privacy policy](https://www.asksage.ai/privacy-policy/)
+- [GitHub](https://github.com/Ask-Sage)
+
+## API Evangelist rating
+
+**Kin Score 38.6** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 43.5 |
+| Contract governance | 18.2 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 39.9 |
+| Access clarity | 46.1 |
+
+**Agent readiness 26.4** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 22.7** — Government & Public Sector
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ask-sage/](https://apis.io/providers/ask-sage/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Ask Sage: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ask-sage/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
